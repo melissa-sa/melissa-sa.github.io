@@ -95,6 +95,87 @@ a.codeRef, a.codeRef:visited, a.lineRef, a.lineRef:visited
         color: #4665A2; 
 }
 
+div.qindex, div.navpath
+{
+        width: 100%;
+        line-height: 140%;
+}
+
+.navpath ul
+{
+        font-size: 11px;
+        background-image:url('src/tab_b.png');
+        background-repeat:repeat-x;
+        background-position: 0 -5px;
+        height:30px;
+        line-height:30px;
+        color:#8AA0CC;
+        border:solid 1px #C2CDE4;
+        overflow:hidden;
+        margin:0px;
+        padding:0px;
+}
+
+.navpath li
+{
+        list-style-type:none;
+        float:left;
+        padding-left:10px;
+        padding-right:15px;
+        background-image:url('src/bc_s.png');
+        background-repeat:no-repeat;
+        background-position:right;
+        color:#364D7C;
+}
+
+.navpath li.navelem a
+{
+        height:32px;
+        display:block;
+        text-decoration: none;
+        outline: none;
+        color: #283A5D;
+        font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+        text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+        text-decoration: none;        
+}
+
+.navpath li.navelem a:hover
+{
+        color:#6884BD;
+}
+
+.navpath li.footer
+{
+        list-style-type:none;
+        float:right;
+        padding-left:10px;
+        padding-right:15px;
+        background-image:none;
+        background-repeat:no-repeat;
+        background-position:right;
+        color:#364D7C;
+        font-size: 8pt;
+}
+
+.navpath li.navelem_current a
+{
+        height:35px;
+        display:block;
+        text-decoration: none;
+        outline: none;
+        color:#03396c;
+        font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+        font-style: bold
+        text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+        text-decoration: none;        
+}
+
+.navpath li.navelem_current a:hover
+{
+        color:#6884BD;
+}
+
 span.legend
 {
         font-size: 70%;
