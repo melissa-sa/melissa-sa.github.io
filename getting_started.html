@@ -1,50 +1,200 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="melissa.css" />
-        <title>Melissa</title>
-    </head>
-    
-<body>
-<div id="titlearea">
-<table cellspacing="0" cellpadding="0">
- <tbody>
- <tr style="height: 56px;">
-  <td style="padding-left: 0.5em;">
-   <div id="melissa">Melissa
-   </div>
-  </td>
- </tr>
- </tbody>
-</table>
-</div>
-  <div id="navrow1" class="tabs">
-    <ul class="tablist">
-      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li class="current"><a href="getting_started.html"><span>Getting Started</span></a></li>
-      <li><a href="refcard.html"><span>Refcard</span></a></li>
-      <li><a href="doxygen.html"><span>Doxygen</span></a></li>
-      <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
+  <head>
+    <meta charset="utf-8" />
+    <link href="prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="prettify.js"></script>
+    <link rel="stylesheet" href="melissa.css" />
 
-      </li>
-    </ul>
-  </div>
-<div id="nav-path" class="navpath">
-  <ul>
-    <li class="navelem_current"><a class="el" href="getting_started.html">Get the software</a></li>
-    <li class="navelem"><a class="el" href="getting_started.html">Install</a></li>
-    <li class="navelem"><a class="el" href="tuto.html">Step-by-step tutorial</a></li>
-  </ul>
-</div>
-<div class="header">
-  <div class="headertitle">
-    <div class="title">Getting Started
+    <title>Melissa</title>
+  </head>
+
+  <body onload="prettyPrint()">
+    <div id="titlearea">
+      <table cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr style="height: 56px;">
+            <td style="padding-left: 0.5em;">
+              <div id="melissa">
+                Melissa
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    You can download Melissa sources <a href="https://github.com/melissa-sa/melissa" title="Melissa repository" target="_blank">here</a>.
-    Melissa is a CMake project.
-  </div>
-</div><!--header-->
+    <div id="navrow1" class="tabs">
+      <ul class="tablist">
+        <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+        <li class="current"><a href="getting_started.html"><span>Getting Started</span></a></li>
+        <li><a href="refcard.html"><span>Refcard</span></a></li>
+        <li><a href="doxygen.html"><span>Doxygen</span></a></li>
+        <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
+      </ul>
+    </div>
+    <div id="nav-path" class="navpath">
+      <ul>
+        <li class="navelem_current"><!--<a class="el" href="getting_started.html">--><button id="start" type="button">Get the Software</button><!--</a>--></li>
+        <li class="navelem"><!--<a class="el" href="getting_started.html">--><button id="install" type="button">Install</button><!--</a>--></li>
+        <li class="navelem"><!--<a class="el" href="tuto.html">--><button id="tuto" type="button">Step-by-step Tutorial</button><!--</a>--></li>
+      </ul>
+    </div>
+    <div class="header">
+      <div class="headertitle">
+        <div class="title">
+        
+        </div>
+        <p>
+      
+        </p>
+        <button id="next" type="button">next</button>
+      </div>
+    </div><!--header-->
+  
+    <div id="tuto_text" class="text">
+      <h3>Overview</h3>
+      <p>
+        In this section, we will use Melissa to perform a global sensitivity analysis on a very simple case: a heat equation solver.<br />
+        This example is available on the repository <code class="code">melissa/source/examples/heat_example</code>.
+        It solves the heat equation on a regular 2D grid, with backward Euler method.<br />
+        The original source codes are <code class="code">heat_base.c</code> in C and <code class="code">heat_base.f90</code> in Fortran.<br />
+        We will go through Melissa integration step by step in these examples.
+        The final result is available in <code class="code">heat.c</code>, <code class="code">heat.f90</code> and <code class="code">heat_launcher.py</code>, and is compiled with Melissa if the option <code class="code">-DBUILD_EXAMPLES=ON</code> is given to CMake.
+      </p>
+      <h3>General Description</h3>
+      <p>
+      </p>
+      <h3>Fortran Solver</h3>
+      <p>
+      </p>
+      <h3>C Solver</h3>
+      <p>
+        First, one have to define a way to pass the parameter sample ID and the Sobol rank to the simulation code.
+        Melissa will need it to identify which simulation sent the data.
+        In our case, we will do that by adding arguments to the command line.<br />
+        We first store the sample ID and the Sobol's rank of the simulation in two integers.
+        The solver can then take from one to five input parameters, so we store them in five doubles.
+        
+        <pre class="prettyprint"><code class="lang-c">
+  int sample_id = 0;
+  int sobol_rank = 0;
+  double param[5];
 
-</body>
+  if (argc < 4)
+  {
+      fprintf (stderr, "Missing parameter");
+      return -1;
+  }
+  sobol_rank = (int)strtol(argv[1], NULL, 10);
+  sample_id = (int)strtol(argv[2], NULL, 10);
+  param[0] = strtod(argv[3], NULL);
+
+  for (n=0; n<4; n++)
+  {
+    param[n+1] = param[0];
+    if (argc > n+4)
+    {
+       param[n+1] = strtod(argv[n+4], NULL);
+    }
+  }
+        </code></pre>
+
+        In the case of Sobol's indices computation, one must define the way simulations are connected inside a group.
+        If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
+        Links between simulations will be MPI communications in that case.
+        Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ.
+        This is called the "not coupled" case.\\
+        In the heat solver, we can easily split MPI communicator, so we will use a coupled case.
+        Define a new integer variable, with a value of <code class="code">1</code>:
+        <pre class="prettyprint"><code class="lang-c">
+  int coupling = 1;
+        </code></pre>
+      </p>
+    </div>
+  
+    <script>
+      <!--
+      
+      var start = document.getElementById('start');
+      var install = document.getElementById('install');
+      var tuto = document.getElementById('tuto');
+      var next = document.getElementById('next');
+      var header = document.getElementsByClassName('header');
+      var headertitle = header[0].getElementsByClassName('title');
+      var header_p = header[0].getElementsByTagName('p');
+      var current = "start"
+  //     function base()
+  //     {
+  //         var titletext = document.createTextNode("Getting Started");
+  //         headertitle[0].replaceChild(titletext, headertitle[0].firstChild);
+  //         var text = document.createTextNode("You can download Melissa sources ");
+  //         header_p[0].replaceChild(text, header_p[0].firstChild);
+  // //         header_p[0].innerHTML = "Step-by-step tutorial";
+  //     }
+  
+      function $_GET(param)
+      {
+          var vars = {};
+          window.location.href.replace( location.hash, '' ).replace( 
+              /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+              function( m, key, value )
+              { // callback
+                  vars[key] = value !== undefined ? value : '';
+              }
+          );
+
+          if ( param ) {
+                return vars[param] ? vars[param] : null;        
+          }
+          return vars;
+      }
+      function gotonext()
+      {
+          if (current == "start")
+          {
+              installf();
+          }
+          else if (current == "install")
+          {
+              tutof();
+          }
+      }
+      function startf()
+      {
+          current = "start"
+          var titletext = document.createTextNode("Getting Started");
+          headertitle[0].replaceChild(titletext, headertitle[0].firstChild);
+          header_p[0].innerHTML ="You can download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>. Melissa is a CMake project.";
+          document.getElementById('tuto_text').style.display = 'none';
+  //         document.getElementById('next').style.visibility = 'visible';
+      }
+      function installf()
+      {
+          current = "install"
+          headertitle[0].innerHTML = "Install";
+          header_p[0].innerHTML = "CMake install";
+          document.getElementById('tuto_text').style.display = 'none';
+  //         document.getElementById('next').style.visibility = 'visible';
+      }
+      function tutof()
+      {
+          current = "tuto"
+          headertitle[0].innerHTML = "Tutorial";
+          header_p[0].innerHTML = "Step-by-step with the heat equation solver";
+          document.getElementById('tuto_text').style.display = 'block';
+          document.getElementById('next').style.visibility="hidden";
+      }
+      
+      startf();
+      next.addEventListener('click', gotonext )
+      
+      start.addEventListener('click', startf );
+  
+      install.addEventListener('click', installf );
+  
+      tuto.addEventListener('click', tutof );
+  
+      //-->
+    </script>
+  </body>
 </html>

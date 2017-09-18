@@ -1,13 +1,14 @@
 
 body, table, div, p, dl
 {
-        font: 400 14px/22px Roboto,sans-serif;
+    font: 400 14px/22px Roboto,sans-serif;
 }
 
-body {
-        background-color: white;
-        color: black;
-        margin: 0;
+body
+{
+    background-color: white;
+    color: black;
+    margin: 0;
 }
 
 em
@@ -17,68 +18,69 @@ em
 
 h1
 {
-        font-size: 150%;
+    font-size: 150%;
 }
 
 .title
 {
-        font: 400 14px/28px Roboto,sans-serif;
-        font-size: 150%;
-        font-weight: bold;
-        margin: 10px 2px;
+    font: 400 14px/28px Roboto,sans-serif;
+    font-size: 150%;
+    font-weight: bold;
+    margin: 10px 2px;
 }
  
 #melissa
 {
-        font: 300% Tahoma, Arial,sans-serif;
-        margin: 0px;
-        padding: 2px 0px;
+    font: 300% Tahoma, Arial,sans-serif;
+    margin: 0px;
+    padding: 2px 0px;
 }
 
 #titlearea
 {
-        padding: 0px;
-        margin: 0px;
-        width: 100%;
-        border-bottom: 1px solid #5373B4;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    border-bottom: 1px solid #05a000;
 }
 
 a
 {
-        color: #3D578C;
-        font-weight: normal;
-        text-decoration: none;
+    color: #3D578C;
+    font-weight: normal;
+    text-decoration: none;
 }
 
-.contents a:visited {
-        color: #4665A2;
+.contents a:visited
+{
+    color: #4665A2;
 }
 
 a:hover
 {
-        text-decoration: underline;
+    text-decoration: underline;
 }
 
 a.qindex
 {
-        font-weight: bold;
+    font-weight: bold;
 }
 
 a.qindexHL
 {
-        font-weight: bold;
-        background-color: #9CAFD4;
-        color: #ffffff;
-        border: 1px double #869DCA;
+    font-weight: bold;
+    background-color: #9CAFD4;
+    color: #ffffff;
+    border: 1px double #869DCA;
 }
 
 .contents a.qindexHL:visited {
-        color: #ffffff;
+    color: #ffffff;
 }
 
 a.el
 {
-        font-weight: bold;
+    font-weight: bold;
 }
 
 a.elRef
@@ -87,99 +89,113 @@ a.elRef
 
 a.code, a.code:visited, a.line, a.line:visited
 {
-        color: #4665A2; 
+    color: #4665A2; 
 }
 
 a.codeRef, a.codeRef:visited, a.lineRef, a.lineRef:visited
 {
-        color: #4665A2; 
+    color: #4665A2; 
 }
+
+button
+{
+    border: none;
+    background-color: rgba(0,0,0,0);
+    color:#364D7C;
+}
+
+button:hover
+{
+    border: none;
+    background-color: rgba(0,0,0,0);
+    color:#6884BD;
+}
+
 
 div.qindex, div.navpath
 {
-        width: 100%;
-        line-height: 140%;
+    width: 100%;
+    line-height: 140%;
 }
-
 .navpath ul
 {
-        font-size: 11px;
-        background-image:url('src/tab_b.png');
-        background-repeat:repeat-x;
-        background-position: 0 -5px;
-        height:30px;
-        line-height:30px;
-        color:#8AA0CC;
-        border:solid 1px #C2CDE4;
-        overflow:hidden;
-        margin:0px;
-        padding:0px;
+    font-size: 11px;
+    background-image:url('src/tab_b.png');
+    background-repeat:repeat-x;
+    background-position: 0 -5px;
+    height:30px;
+    line-height:30px;
+    color:#8AA0CC;
+    border:solid 1px #05a000;
+    overflow:hidden;
+    margin:0px;
+    padding:0px;
 }
 
 .navpath li
 {
-        list-style-type:none;
-        float:left;
-        padding-left:10px;
-        padding-right:15px;
-        background-image:url('src/bc_s.png');
-        background-repeat:no-repeat;
-        background-position:right;
-        color:#364D7C;
+    list-style-type:none;
+    float:left;
+    padding-left:10px;
+    padding-right:15px;
+    background-image:url('src/bc_s.png');
+    background-repeat:no-repeat;
+    background-position:right;
+    color:#364D7C;
 }
 
 .navpath li.navelem a
 {
-        height:32px;
-        display:block;
-        text-decoration: none;
-        outline: none;
-        color: #283A5D;
-        font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
-        text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
-        text-decoration: none;        
+    height:32px;
+    display:block;
+    text-decoration: none;
+    outline: none;
+    color: #283A5D;
+    font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+    text-decoration: none;        
 }
 
 .navpath li.navelem a:hover
 {
-        color:#6884BD;
+    color:#6884BD;
 }
 
 .navpath li.footer
 {
-        list-style-type:none;
-        float:right;
-        padding-left:10px;
-        padding-right:15px;
-        background-image:none;
-        background-repeat:no-repeat;
-        background-position:right;
-        color:#364D7C;
-        font-size: 8pt;
+    list-style-type:none;
+    float:right;
+    padding-left:10px;
+    padding-right:15px;
+    background-image:none;
+    background-repeat:no-repeat;
+    background-position:right;
+    color:#364D7C;
+    font-size: 8pt;
 }
 
 .navpath li.navelem_current a
 {
-        height:35px;
-        display:block;
-        text-decoration: none;
-        outline: none;
-        color:#03396c;
-        font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
-        font-style: bold
-        text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
-        text-decoration: none;        
+    height:35px;
+    display:block;
+    text-decoration: none;
+    outline: none;
+    color:#03396c;
+    font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+    font-style: bold;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+    text-decoration: none;        
 }
 
 .navpath li.navelem_current a:hover
 {
-        color:#6884BD;
+    color:#6884BD;
 }
 
 span.legend
 {
-        font-size: 70%;
-        text-align: center;
+    font-size: 70%;
+    text-align: center;
 }
 
 .tabs, .tabs2, .tabs3
@@ -254,14 +270,24 @@ span.legend
 
 div.header
 {
-        background-image:url('src/nav_h.png');
-        background-repeat:repeat-x;
-        background-color: #F9FAFC;
-        margin:  0px;
-        border-bottom: 1px solid #C4CFE5;
+    background-image:url('src/nav_h.png');
+    background-repeat:repeat-x;
+    background-color: #FCFCFC;
+    margin:  0px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+div.text
+{
+    padding: 5px 10px 5px 10px;
 }
 
 div.headertitle
 {
-        padding: 5px 5px 5px 10px;
+    padding: 5px 10px 5px 10px;
+}
+pre.prettyprint
+{
+    background-color: #EEEEEE;
+    border: 1px solid #05a000;
 }
