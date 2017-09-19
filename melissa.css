@@ -126,7 +126,8 @@ div.qindex, div.navpath
     height:30px;
     line-height:30px;
     color:#8AA0CC;
-    border:solid 1px #05a000;
+    border-top:solid 1px #05a000;
+/*     border-bottom:solid 1px #05a000; */
     overflow:hidden;
     margin:0px;
     padding:0px;
@@ -275,6 +276,7 @@ div.header
     background-color: #FCFCFC;
     margin:  0px;
     border-bottom: 1px solid #e5e5e5;
+    border-top: solid 1px #05a000;
 }
 
 div.text

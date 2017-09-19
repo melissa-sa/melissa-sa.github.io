@@ -1,0 +1,234 @@
+ 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link href="prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="prettify.js"></script>
+    <link rel="stylesheet" href="melissa.css" />
+
+    <title>Melissa</title>
+  </head>
+
+  <body onload="prettyPrint()">
+    <div id="titlearea">
+      <table cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr style="height: 56px;">
+            <td style="padding-left: 0.5em;">
+              <div id="melissa">
+                Melissa
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="navrow1" class="tabs">
+      <ul class="tablist">
+        <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+        <li class="current"><a href="tutorial.html"><span>Getting Started</span></a></li>
+        <li><a href="refcard.html"><span>Refcard</span></a></li>
+        <li><a href="doxygen.html"><span>Doxygen</span></a></li>
+        <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
+      </ul>
+    </div>
+    <div id="nav-path" class="navpath">
+      <ul>
+        <li class="navelem"><a class="el" href="start.html"><button id="start" type="button">Get the Software</button></a></li>
+        <li class="navelem"><a class="el" href="install.html"><button id="install" type="button">Install</button></a></li>
+        <li class="navelem_current"><a class="el" href="tutorial.html"><button id="tuto" type="button">Step-by-step Tutorial</button></a></li>
+      </ul>
+    </div>
+    <div class="header">
+      <div class="headertitle">
+        <div class="title">
+          Tutorial
+        </div>
+        <p>
+          Step-by-step with the heat equation solver
+        </p>
+        <a href="install.html"><button id="prev" type="button">previous</button></a><button id="next" type="button">next</button>
+        <script>
+          document.getElementById('next').style.visibility="hidden";
+        </script>
+      </div>
+    </div><!--header-->
+  
+    <div id="tuto_text" class="text">
+      <h3>Overview</h3>
+      <p>
+        In this section, we will use Melissa to perform a global sensitivity analysis on a very simple case: a heat equation solver.<br />
+        This example is available on the repository <code class="code">melissa/source/examples/heat_example</code>.
+        It solves the heat equation on a regular 2D grid, with backward Euler method.<br />
+        The original source codes are <code class="code">heat_base.c</code> in C and <code class="code">heat_base.f90</code> in Fortran.<br />
+        We will go through Melissa integration step by step in these examples.
+        The final results are available in <code class="code">heat.c</code> and <code class="code">heat.f90</code>, and are compiled with Melissa if the option <code class="code">-DBUILD_EXAMPLES=ON</code> is given to CMake.
+      </p>
+<!--       <form method="post" action="traitement.php"> -->
+      <fieldset id="par">
+        <legend>Simulation type</legend> <!-- Titre du fieldset --> 
+        <p>
+          <input type="radio" name="MPI" value="mpi" id="MPI" checked/> <label for="MPI">MPI</label><br />
+          <input type="radio" name="MPI" value="nompi" id="noMPI" /> <label for="noMPI">Other</label><br />
+        </p>
+      </fieldset>
+      <fieldset id="lang">
+        <legend>Simulation language</legend> <!-- Titre du fieldset --> 
+        <p>
+          <input type="radio" name="lang" value="c" id="C" checked/> <label for="C">C</label><br />
+          <input type="radio" name="lang" value="f" id="Fortran" /> <label for="Fortran">Fortran</label><br />
+        </p>
+      </fieldset>
+<!--       </form> -->
+      <h3>General Description</h3>
+      <p>
+      </p>
+      <h3 class="f mpi">Fortran + MPI Solver</h3>
+      <h3 class="c mpi">C + MPI Solver</h3>
+      <h3 class="f nompi">Fortran Solver without MPI</h3>
+      <h3 class="c nompi">C Solver without MPI</h3>
+      <p>
+        First, one have to define a way to pass the parameter sample ID and the Sobol rank to the simulation code.
+        Melissa will need it to identify which simulation sent the data.
+        In our case, we will do that by adding arguments to the command line.<br />
+        We first store the sample ID and the Sobol's rank of the simulation in two integers.
+        The solver can then take from one to five input parameters, so we store them in five doubles.
+        
+        <pre class="prettyprint"><code class="lang-c">
+  int sample_id = 0;
+  int sobol_rank = 0;
+  double param[5];
+
+  if (argc < 4)
+  {
+      fprintf (stderr, "Missing parameter");
+      return -1;
+  }
+  sobol_rank = (int)strtol(argv[1], NULL, 10);
+  sample_id = (int)strtol(argv[2], NULL, 10);
+  param[0] = strtod(argv[3], NULL);
+
+  for (n=0; n<4; n++)
+  {
+    param[n+1] = param[0];
+    if (argc > n+4)
+    {
+       param[n+1] = strtod(argv[n+4], NULL);
+    }
+  }
+        </code></pre>
+
+        In the case of Sobol's indices computation, one must define the way simulations are connected inside a group.
+        If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
+        Links between simulations will be MPI communications in that case.
+        Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ.
+        This is called the "not coupled" case.<br />
+        In the heat solver, we can easily split MPI communicator, so we will use a coupled case.
+        Define a new integer variable, with a value of <code class="code">1</code>:
+        <pre class="prettyprint"><code class="lang-c">
+  int coupling = 1;
+        </code></pre>
+        The first Melissa function can be called before the main <code class="code">for</code> loop.
+        It takes seven arguments:
+        <ul>
+          <li><code class="code">vect_size</code>: the size of the local result vector</li>
+          <li><code class="code">np</code>: the size of the local MPI communicator</li>
+          <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
+          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
+          <li><code class="code">sample_id</code>: the ID of the group in the study</li>
+          <li><code class="code">comm</code>: the local MPI communicator</li>
+          <li><code class="code">coupling</code>: the coupling variable</li>
+        </ul>
+        <pre class="prettyprint"><code class="lang-c">
+  melissa_init (&vect_size, &np, &me, &sobol_rank, &sample_id, &comm, &coupling);
+        </code></pre>
+        This function has to be called once by every process.
+        Inside the main loop, the result vector is updated by the <code class="code">conjgrad</code> function.
+        Send this updated vector to Melissa Server by calling <code class="code">melissa_send</code> right after the <code class="code">conjgrad</code> function.
+        This function takes six arguments:
+        <ul>
+          <li><code class="code">n</code>: the iteration number</li>
+          <li><code class="code">field_name</code>: the name of the field sent</li>
+          <li><code class="code">u</code>: the vector to send to Melissa Server</li>
+          <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
+          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
+          <li><code class="code">sample_id</code>: the ID of the group in the study</li>
+        </ul>
+        <pre class="prettyprint"><code class="lang-c">
+  conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon, &i1, &in, &np, &me, &next, &previous, &fcomm);
+  melissa_send (&n, field_name, u, &me, &sobol_rank, &sample_id);
+        </code></pre>
+        After the main loop, call <code class="code">melissa_finalize</code> to free Melissa structures and disconnect the simulations from the server.
+        This function does not take any argument.
+        <pre class="prettyprint"><code class="lang-c">
+  melissa_finalize ();
+        </code></pre>
+      </p>
+      
+    </div>
+    <script>
+        <!--
+        var par = document.querySelector('input[name="MPI"]:checked').value;
+        if (par === 'mpi') {par = 'nompi';} else {par='mpi';};
+        var lang = document.querySelector('input[name="lang"]:checked').value;
+        if (lang === 'c') {lang = 'f';} else {lang='c';};
+        
+        var element1 = document.getElementById('par');
+        element1.addEventListener('change', get_par );
+        var element2 = document.getElementById('lang');
+        element2.addEventListener('change', get_lang );
+        
+        function get_par()
+        {
+            par = document.querySelector('input[name="MPI"]:checked').value;
+            if (par === 'mpi') {par = 'nompi';} else {par = 'mpi';}
+            plop();
+        }
+        
+        function get_lang()
+        {
+            lang = document.querySelector('input[name="lang"]:checked').value;
+            if (lang === 'c') {lang = 'f';} else {lang = 'c';};
+            plop();
+        }
+        
+        function plop()
+        {
+            var i, blocks;
+            blocks = document.getElementsByClassName('c');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'block';
+            }
+            blocks = document.getElementsByClassName('f');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'block';
+            }
+            blocks = document.getElementsByClassName('mpi');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'block';
+            }
+            blocks = document.getElementsByClassName('nompi');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'block';
+            }
+            blocks = document.getElementsByClassName(par);
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'none';
+            }
+            blocks = document.getElementsByClassName(lang);
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'none';
+            }
+        }
+        plop();
+        //-->
+    </script>
+  </body>
+</html>

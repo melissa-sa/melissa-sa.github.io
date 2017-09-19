@@ -103,13 +103,44 @@
         If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
         Links between simulations will be MPI communications in that case.
         Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ.
-        This is called the "not coupled" case.\\
+        This is called the "not coupled" case.<br />
         In the heat solver, we can easily split MPI communicator, so we will use a coupled case.
         Define a new integer variable, with a value of <code class="code">1</code>:
         <pre class="prettyprint"><code class="lang-c">
   int coupling = 1;
         </code></pre>
       </p>
+      The first Melissa function can be called before the main <code class="code">for</code> loop.
+      It takes seven arguments:
+      <ul>
+        <li><code class="code">vect_size</code>: the size of the local result vector</li>
+        <li><code class="code">np</code>: the size of the local MPI communicator</li>
+        <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
+        <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
+        <li><code class="code">sample_id</code>: the ID of the group in the study</li>
+        <li><code class="code">comm</code>: the local MPI communicator</li>
+        <li><code class="code">coupling</code>: the coupling variable</li>
+      </ul>
+        <pre class="prettyprint"><code class="lang-c">
+  melissa_init (&vect_size, &np, &me, &sobol_rank, &sample_id, &comm, &coupling);
+        </code></pre>
+      This function has to be called once by every process.
+      Inside the main loop, the result vector is updated by the <code class="code">conjgrad</code> function.
+      Send this updated vector to Melissa Server by calling <code class="code">melissa_send</code> right after the <code class="code">conjgrad</code> function.
+      This function takes six arguments:
+      <ul>
+        <li><code class="code">n</code>: the iteration number</li>
+        <li><code class="code">field_name</code>: the name of the field sent</li>
+        <li><code class="code">u</code>: the vector to send to Melissa Server</li>
+        <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
+        <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
+        <li><code class="code">sample_id</code>: the ID of the group in the study</li>
+      </ul>
+        <pre class="prettyprint"><code class="lang-c">
+  conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon, &i1, &in, &np, &me, &next, &previous, &fcomm);
+  melissa_send (&n, field_name, u, &me, &sobol_rank, &sample_id);
+        </code></pre>
+      
     </div>
   
     <script>
