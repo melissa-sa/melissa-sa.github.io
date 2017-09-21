@@ -56,10 +56,10 @@
     </div><!--header-->
  
     <div id="tuto_text" class="text">
-      <h3>Overview</h3>
+      <h2>Overview</h2>
       <p>
         In this section, we will use Melissa to perform a global sensitivity analysis on a very simple case: a heat equation solver.<br />
-        This example is available on the repository <code class="code">Melissa/source/examples/heat_example</code>.
+        This example is available on the folder <code class="code">source/examples/heat_example</code>.
         It solves the heat equation on a regular 2D grid, with backward Euler method.<br />
         The original source codes are <code class="code">heat_base.c</code> in C and <code class="code">heat_base.f90</code> in Fortran.<br />
         We will go through Melissa integration step by step in these examples.
@@ -81,13 +81,13 @@
         </p>
       </fieldset>
 <!--       </form> -->
-      <h3>General Description</h3>
+      <h2>General Description</h2>
       <p>
       </p>
-      <h3 class="f mpi">Fortran + MPI Solver</h3>
-      <h3 class="c mpi">C + MPI Solver</h3>
-      <h3 class="f nompi">Fortran Solver without MPI</h3>
-      <h3 class="c nompi">C Solver without MPI</h3>
+      <h2 class="f mpi">Fortran + MPI Solver</h2>
+      <h2 class="c mpi">C + MPI Solver</h2>
+      <h2 class="f nompi">Fortran Solver without MPI</h2>
+      <h2 class="c nompi">C Solver without MPI</h2>
       <p>
         First, one have to define a way to pass the parameter sample ID and the Sobol rank to the simulation code.
         Melissa will need it to identify which simulation sent the data.
@@ -232,10 +232,62 @@
         </code></pre>
       </p>
      
-      <h3>Launcher definition</h3>
+      <h2>Launcher definition</h2>
       <p>
-        Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.
+        Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.<br />
+        This is done by giving the launcher some functions and variables through a python file. Take <code class="code">launcher/options.py</code> as a base for this file.
+        There are six sets of variables to define, as dictionaries.
+        <ul>
+          <li><code class="code">GLOBAL_OPTIONS</code>: contains informations about your environement.<br />
+          <li><code class="code">STUDY_OPTIONS</code>: sets the parameters of your sensitivity study. They will be used by the launcher to generate its internal structures for the study management.</li>
+          <li><code class="code">SERVER_OPTIONS</code> and <code class="code">SIMULATIONS_OPTIONS</code>: sets some parameters to launch the server and simulations jobs.</li>
+          <li><code class="code">MELISSA_STATS</code>: are used to activate (or not) the computations of the iterative statistics.</li>
+          <li><code class="code">USER_FUNCTIONS</code>: are pointers to user defined functions, used by the launcher. Some of them are optional, others are mandatory. We will describe these functions in this section.</li>
+        </ul>
+        Note that you can add fields to the options dictionaries, and they can be used in the user defined functions.
       </p>
+      <h3>Functions</h3>
+      Melissa Launcher needs the mandatory functions to be defined. Otherwhise, it will return without launching the study.
+      The optional functions are ignored if they are not defined by the user.
+      <ul>
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code> (optional):</pre></li>
+        This function is called only once, before starting the study. It is called from the dirrectory set in <code class="code">GLOBAL_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter']</code> (mandatory):</pre></li>
+        This function is used by Melissa launcher to draw each single parameter in the parameter sets. If no function provided, <code class="code">numpy.random.uniform</code> is used by default.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_group']</code> (optional):</pre></li>
+        This function is called once for each group in the study, before launching the study. Its behavior is the same as <code class="code">create_study</code>.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_simulation']</code> (optional):</pre></li>
+        This function is called once for each simulation in the study, before launching the study. Its behavior is the same as <code class="code">create_study</code>.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code> (optional):</pre></li>
+        Once every simulation, group and parameter set is defined, Melissa Launcher uses this function to launch Melissa Server.
+        By default, it launches the server using <code class="code">mpirun</code> from the directory <code class="code">GLOBAL_OPTIONS['working_directory']</code>. In a cluster, this function will have to call a batch script, which could have been generated in <code class="code">create_study</code> for example.
+        This function takes a <code class="code">Server</code> object for argument, and needs to set the server job id in <code class="code">server.job_id</code>.
+        In a cluster the job id is given by the batch scheduller. In your local machine, you can use the process id.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_simulation']</code> (mandatory):</pre></li>
+        This function is used to launch simulations. In the case of Sobol' indices computation, a group is considered as a simulation. The function takes a <code class="code">Simulation</code> object for argument, and needs to set the simulation job id in <code class="code">simulation.job_id</code>.
+        In a cluster the job id is given by the batch scheduller. In your local machine, you can use the process id.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_server_job']</code> (mandatory):</pre></li>
+        This function is called while the server is running. It checks the job's status in the scope of the fault tolerance mechanism.
+        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Server</code> object inherites from <code class="code">Job</code>, and the job id is in <code class="code">job.job_id</code>.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_simulation_job']</code> (mandatory):</pre></li>
+        This function is called while a simulation is running. It checks the job's status in the scope of the fault tolerance mechanism.
+        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Simulation</code> object inherites from <code class="code">Job</code>, and the job id is in <code class="code">job.job_id</code>.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> (optional):</pre></li>
+        This function is calles by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
+        The job id is defined in <code class="code">job.job_id</code>.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_server']</code> (optional):</pre></li>
+        This function have the same behavior as <code class="code">launch_server</code>. It is used to reboot the server in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="code">launch_server</code> function by default.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_simulation']</code> (optional):</pre></li>
+        This function have the same behavior as <code class="code">launch_simulation</code>. It is used to reboot a simulation (or a group of simulations) in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="code">launch_simulation</code> function by default.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
+        Melissa Launcher calls this function right before launching each simulation job. You can make it block until you want to launch the next simulation.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
+        This function is called once at the end of the study. It does nothing by default.
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['finalize']</code> (optional):</pre></li>
+        The same as <code class="code">postprocessing</code>.
+      </ul>
+      
+      An example <code class="code">options.py</code> file is available in <code class="code">source/examples/heat_example</code>.
      
     </div>
     <script>
