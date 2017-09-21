@@ -1,4 +1,4 @@
- 
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -54,30 +54,30 @@
         </script>
       </div>
     </div><!--header-->
-  
+ 
     <div id="tuto_text" class="text">
       <h3>Overview</h3>
       <p>
         In this section, we will use Melissa to perform a global sensitivity analysis on a very simple case: a heat equation solver.<br />
-        This example is available on the repository <code class="code">melissa/source/examples/heat_example</code>.
+        This example is available on the repository <code class="code">Melissa/source/examples/heat_example</code>.
         It solves the heat equation on a regular 2D grid, with backward Euler method.<br />
         The original source codes are <code class="code">heat_base.c</code> in C and <code class="code">heat_base.f90</code> in Fortran.<br />
         We will go through Melissa integration step by step in these examples.
-        The final results are available in <code class="code">heat.c</code> and <code class="code">heat.f90</code>, and are compiled with Melissa if the option <code class="code">-DBUILD_EXAMPLES=ON</code> is given to CMake.
+        The final results are available in <code class="code">heat.c</code>, <code class="code">heat.f90</code> and <code class="code">options.py</code>. They are compiled with Melissa if the option <code class="code">-DBUILD_EXAMPLES=ON</code> is given to CMake.
       </p>
 <!--       <form method="post" action="traitement.php"> -->
       <fieldset id="par">
-        <legend>Simulation type</legend> <!-- Titre du fieldset --> 
+        <legend>Simulation type</legend> <!-- Titre du fieldset -->
         <p>
-          <input type="radio" name="MPI" value="mpi" id="MPI" checked/> <label for="MPI">MPI</label><br />
-          <input type="radio" name="MPI" value="nompi" id="noMPI" /> <label for="noMPI">Other</label><br />
+          <input type="radio" name="MPI" value="nompi" id="MPI" checked/> <label for="MPI">MPI    </label><br />
+          <input type="radio" name="MPI" value="mpi" id="noMPI" /> <label for="noMPI">No MPI</label><br />
         </p>
       </fieldset>
       <fieldset id="lang">
-        <legend>Simulation language</legend> <!-- Titre du fieldset --> 
+        <legend>Simulation language</legend> <!-- Titre du fieldset -->
         <p>
-          <input type="radio" name="lang" value="c" id="C" checked/> <label for="C">C</label><br />
-          <input type="radio" name="lang" value="f" id="Fortran" /> <label for="Fortran">Fortran</label><br />
+          <input type="radio" name="lang" value="f" id="C" checked/> <label for="C">C</label><br />
+          <input type="radio" name="lang" value="c" id="Fortran" /> <label for="Fortran">Fortran</label><br />
         </p>
       </fieldset>
 <!--       </form> -->
@@ -94,8 +94,8 @@
         In our case, we will do that by adding arguments to the command line.<br />
         We first store the sample ID and the Sobol's rank of the simulation in two integers.
         The solver can then take from one to five input parameters, so we store them in five doubles.
-        
-        <pre class="prettyprint"><code class="lang-c">
+       
+        <pre class="prettyprint c"><code class="lang-c">
   int sample_id = 0;
   int sobol_rank = 0;
   double param[5];
@@ -105,9 +105,9 @@
       fprintf (stderr, "Missing parameter");
       return -1;
   }
-  sobol_rank = (int)strtol(argv[1], NULL, 10);
-  sample_id = (int)strtol(argv[2], NULL, 10);
-  param[0] = strtod(argv[3], NULL);
+  sobol_rank = (int)strtol(argv[1], NULL, 10); // sobol rank
+  sample_id = (int)strtol(argv[2], NULL, 10); // sobol group
+  param[0] = strtod(argv[3], NULL); // initial temperature
 
   for (n=0; n<4; n++)
   {
@@ -118,7 +118,33 @@
     }
   }
         </code></pre>
+       
+        <pre class="prettyprint f"><code class="lang-fortran">
+  integer :: sample_id = 0
+  integer :: sobol_rank = 0
+  real*8,dimension(5) :: param
+ 
+  if (iargc() .lt. 4) then
+    print*,"Missing parameter"
+    return
+  endif
 
+  call getarg(1, arg)
+  read( arg, * ) sobol_rank ! sobol rank
+  call getarg(2, arg)
+  read( arg, * ) sample_id ! sobol group
+  call getarg(3, arg)
+  read( arg, * ) param(1) ! initial temperature
+  param(:) = param(1)
+
+  do n=5, 8
+    if(iargc() .ge. n) then
+      call getarg(n-1, arg)
+      read( arg, * ) param(n-3)
+    endif
+  enddo
+        </code></pre>
+        <span class="mpi">
         In the case of Sobol's indices computation, one must define the way simulations are connected inside a group.
         If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
         Links between simulations will be MPI communications in that case.
@@ -126,95 +152,126 @@
         This is called the "not coupled" case.<br />
         In the heat solver, we can easily split MPI communicator, so we will use a coupled case.
         Define a new integer variable, with a value of <code class="code">1</code>:
-        <pre class="prettyprint"><code class="lang-c">
+        <pre class="prettyprint c"><code class="lang-c">
   int coupling = 1;
         </code></pre>
+        <pre class="prettyprint f"><code class="lang-fortran">
+  integer :: coupling = 1
+        </code></pre>
+        </span>
+        To use the Melissa functions, one have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
+        <pre class="prettyprint c mpi"><code class="lang-c">
+  #include &#60melissa_api.h&#62
+        </code></pre>
+        <pre class="prettyprint c nompi"><code class="lang-c">
+  #include &#60melissa_api_no_mpi.h&#62
+        </code></pre>
+        <pre class="prettyprint f"><code class="lang-fortran">
+  include "melissa_api.f90"
+        </code></pre>
         The first Melissa function can be called before the main <code class="code">for</code> loop.
-        It takes seven arguments:
+        It has to be called exactly once <span class="mpi"> by every process</span>.
+        <span class="mpi">It takes seven arguments:</span>
+        <span class="nompi">It takes tree arguments:</span>
         <ul>
           <li><code class="code">vect_size</code>: the size of the local result vector</li>
-          <li><code class="code">np</code>: the size of the local MPI communicator</li>
-          <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
+          <span class="mpi"><li><code class="code">np</code>: the size of the local MPI communicator</li></span>
+          <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
           <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
-          <li><code class="code">sample_id</code>: the ID of the group in the study</li>
-          <li><code class="code">comm</code>: the local MPI communicator</li>
+          <span class="mpi"><li><code class="code">sample_id</code>: the ID of the group in the study</li></span>
+          <span class="mpi"><li><code class="code">comm</code>: the local MPI communicator</li></span>
           <li><code class="code">coupling</code>: the coupling variable</li>
         </ul>
-        <pre class="prettyprint"><code class="lang-c">
-  melissa_init (&vect_size, &np, &me, &sobol_rank, &sample_id, &comm, &coupling);
+        <pre class="prettyprint c mpi"><code class="lang-c">
+  melissa_init(&vect_size, &np, &me, &sobol_rank, &sample_id, &comm, &coupling);
         </code></pre>
-        This function has to be called once by every process.
+        <pre class="prettyprint f mpi"><code class="lang-fortran">
+  call melissa_init(vect_size, np, me, sobol_rank, sample_id, comm, coupling)
+        </code></pre>
+        <pre class="prettyprint c nompi"><code class="lang-c">
+  melissa_init_no_mpi(&vect_size, &sobol_rank, &sample_id);
+        </code></pre>
+        <pre class="prettyprint f nompi"><code class="lang-fortran">
+  call melissa_init_no_mpi(vect_size, sobol_rank, sample_id)
+        </code></pre>
         Inside the main loop, the result vector is updated by the <code class="code">conjgrad</code> function.
-        Send this updated vector to Melissa Server by calling <code class="code">melissa_send</code> right after the <code class="code">conjgrad</code> function.
-        This function takes six arguments:
+        Send this updated vector to Melissa Server by calling <span class="mpi"><code class="code">melissa_send</code></span><span class="nompi"><code class="code">melissa_send_no_mpi</code></span> right after the <code class="code">conjgrad</code> function.
+        <span class="mpi">This function takes six arguments:</span>
+        <span class="nompi">This function takes five arguments:</span>
         <ul>
-          <li><code class="code">n</code>: the iteration number</li>
+          <li><code class="code">n</code>: the current iteration number</li>
           <li><code class="code">field_name</code>: the name of the field sent</li>
           <li><code class="code">u</code>: the vector to send to Melissa Server</li>
-          <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
+          <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
           <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
           <li><code class="code">sample_id</code>: the ID of the group in the study</li>
         </ul>
-        <pre class="prettyprint"><code class="lang-c">
+        <pre class="prettyprint c mpi"><code class="lang-c">
   conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon, &i1, &in, &np, &me, &next, &previous, &fcomm);
   melissa_send (&n, field_name, u, &me, &sobol_rank, &sample_id);
         </code></pre>
+        <pre class="prettyprint f mpi"><code class="lang-fortran">
+  call conjgrad(A, F, U, nx, ny, epsilon, i1, in, np, me, next, previous, comm)
+  call melissa_send(n, name, u, me, sobol_rank, sample_id)
+        </code></pre>
+        <pre class="prettyprint c nompi"><code class="lang-c">
+  conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon);
+  melissa_send_no_mpi(&n, field_name, u, &sobol_rank, &sample_id);
+        </code></pre>
+        <pre class="prettyprint f nompi"><code class="lang-fortran">
+  call conjgrad(A, F, U, nx, ny, epsilon)
+  call melissa_send_no_mpi(n, name, u, sobol_rank, sample_id)
+        </code></pre>
         After the main loop, call <code class="code">melissa_finalize</code> to free Melissa structures and disconnect the simulations from the server.
         This function does not take any argument.
-        <pre class="prettyprint"><code class="lang-c">
-  melissa_finalize ();
+        <pre class="prettyprint c"><code class="lang-c">
+  melissa_finalize();
+        </code></pre>
+        <pre class="prettyprint f"><code class="lang-fortran">
+  call melissa_finalize()
         </code></pre>
       </p>
-      
+     
+      <h3>Launcher definition</h3>
+      <p>
+        Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.
+      </p>
+     
     </div>
     <script>
         <!--
         var par = document.querySelector('input[name="MPI"]:checked').value;
-        if (par === 'mpi') {par = 'nompi';} else {par='mpi';};
         var lang = document.querySelector('input[name="lang"]:checked').value;
-        if (lang === 'c') {lang = 'f';} else {lang='c';};
-        
+       
         var element1 = document.getElementById('par');
-        element1.addEventListener('change', get_par );
+        element1.addEventListener('change', plop );
         var element2 = document.getElementById('lang');
-        element2.addEventListener('change', get_lang );
-        
-        function get_par()
-        {
-            par = document.querySelector('input[name="MPI"]:checked').value;
-            if (par === 'mpi') {par = 'nompi';} else {par = 'mpi';}
-            plop();
-        }
-        
-        function get_lang()
-        {
-            lang = document.querySelector('input[name="lang"]:checked').value;
-            if (lang === 'c') {lang = 'f';} else {lang = 'c';};
-            plop();
-        }
-        
+        element2.addEventListener('change', plop );
+       
         function plop()
         {
+            par = document.querySelector('input[name="MPI"]:checked').value;
+            lang = document.querySelector('input[name="lang"]:checked').value;
             var i, blocks;
             blocks = document.getElementsByClassName('c');
             for (i = 0; i < blocks.length ; i++)
             {
-                blocks[i].style.display = 'block';
+                blocks[i].style.display = '';
             }
             blocks = document.getElementsByClassName('f');
             for (i = 0; i < blocks.length ; i++)
             {
-                blocks[i].style.display = 'block';
+                blocks[i].style.display = '';
             }
             blocks = document.getElementsByClassName('mpi');
             for (i = 0; i < blocks.length ; i++)
             {
-                blocks[i].style.display = 'block';
+                blocks[i].style.display = '';
             }
             blocks = document.getElementsByClassName('nompi');
             for (i = 0; i < blocks.length ; i++)
             {
-                blocks[i].style.display = 'block';
+                blocks[i].style.display = '';
             }
             blocks = document.getElementsByClassName(par);
             for (i = 0; i < blocks.length ; i++)

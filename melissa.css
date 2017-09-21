@@ -288,8 +288,14 @@ div.headertitle
 {
     padding: 5px 10px 5px 10px;
 }
+
 pre.prettyprint
 {
     background-color: #EEEEEE;
     border: 1px solid #05a000;
+}
+
+code.code
+{
+    color: red;
 }
