@@ -46,11 +46,53 @@
           Install
         </div>
         <p>
-          CMake install
         </p>
         <a href="start.html"><button id="prev" type="button">previous</button></a><a href="tutorial.html"><button id="next" type="button">next</button></a>
       </div>
     </div><!--header-->
-
+    
+    <div id="install_text" class="text">
+      <h2>Prerequisites</h2>
+      <p>
+        Melissa is a CMake project.
+        To install Melissa from the sources, you will need CMake and PkgConfig.
+        If you don't have ZeroMQ installed from sources, CMake will download and install it.<br />
+        From the <code class="code">Melissa</code> directory:
+        <pre class="prettyprint"><code class="lang-bash">
+  mkdir build
+  cd build
+  cmake ../source
+  make
+  make install
+        </code></pre>
+      </p>
+      <h2>CMake options</h2>
+      A list of usefull CMake options:
+        <ul>
+          <li><code class="code">-DBUILD_WITH_MPI</code> (default: ON)</li>
+          Enables MPI.
+          <li><code class="code">-DBUILD_DOCUMENTATION</code> (default: OFF)</li>
+          If Doxygen is found, builds the Doxygen documentation.
+          <li><code class="code">-DBUILD_EXAMPLES</code> (default: ON)</li>
+          Compile the heat equation solver examples.
+          <li><code class="code">-DBUILD_EXAMPLES_WITH_MPI</code> (default: ON)</li>
+          Complie the examples with MPI.
+          <li><code class="code">-DBUILD_SHARED_LIBS</code> (default: OFF)</li>
+          Builds Melissa libraries as shared libraries.
+          <li><code class="code">-DBUILD_TESTING</code> (default: ON)</li>
+          Builds Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code>.
+          <li><code class="code">-DBUILD_WITH_OpenMP</code> (default: OFF)</li>
+          Enables OpenMP for Melissa Server.
+          <li><code class="code">-DBUILD_WITH_PROBES</code> (default: OFF)</li>
+          Adds some debug outputs to Melissa server.
+          <li><code class="code">-DCMAKE_INSTALL_PREFIX</code> (default: '../install')</li>
+          Defines melissa install directory.
+          <li><code class="code">-DINSTALL_ZMQ</code> (default: ON)</li>
+          Enable CMake to install ZeroMQ. If you already have ZeroMQ manualy installed, put it to OFF and use the option described after:
+          <li><code class="code">-DZMQ_DIR</code></li>
+          Sets the path to your ZeroMQ install directory. If the directory is not found, the previous option will be turned to ON and ZeroMQ will be downloaded and installed.
+        </ul>
+      </p>
+    </div>
   </body>
 </html>
