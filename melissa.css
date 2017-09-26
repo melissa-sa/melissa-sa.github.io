@@ -295,7 +295,13 @@ pre.prettyprint
     border: 1px solid #CCCCCC;
 }
 
+code.prettyprint
+{
+    background-color: #EEEEEE;
+}
+
 code.code
 {
-    color: red;
+    color: #800;
+    background-color: #EEEEEE;
 }
