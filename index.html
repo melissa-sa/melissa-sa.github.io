@@ -19,24 +19,42 @@
             </tbody>
             </table>
         </div>
-        <div id="navrow1" class="tabs">
+        <nav id="navrow1" class="tabs">
+          <a href="index.html"><div id="melissa">Melissa</div></a>
             <ul class="tablist">
-            <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
-            <li><a href="start.html"><span>Getting Started</span></a></li>
+            <li><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
+            <li><a href="tutorial.html"><span>Tutorial</span></a></li>
             <li><a href="refcard.html"><span>Refcard</span></a></li>
-            <li><a href="doxygen.html"><span>Doxygen</span></a></li>
+            <li><a href="doxygen.html"><span>Documentation</span></a></li>
+            <li><a href="contacts.html"><span>Contacts</span></a></li>
             <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
-
             </li>
             </ul>
+        </nav>
+        <div id="contener1">
+          <section id="index_text" class="text">
+            <h1>Modular External Library for In Situ Sensitivity Analysis
+            </h1>
+            <p>
+              Melissa code will be available on <a href="https://github.com/melissa-sa/melissa" title="Melissa repository">this github repo</a> before Supercomputing 2017
+            </p>
+            <h2>Overview</h2>
+            <p>
+              Melissa is an in situ solution for sensitivity analysis.
+              It implements iterative algorithms to compute spatio-temporal statistic fields over results of large scale sensitivity studies.
+              Melissa rely on a client/server architecture, composed of three main modules:
+              <ul>
+                <li> Melissa Server: an independent parallel executable. It receives data from the simulations, updates iterative statistics as soon as possible, then trow data away.</li>
+                <li> Melissa API: a shared library to be linked within the simulation code. It mainly transmit simulation data to Melissa Server at each timestep. The simulations of the sensitivity analysis become the \textit{clients} of Melissa Server.</li>
+                <li> Melissa Master: A Python script in charge of generating and managing the whole global sensitivity analysis.</li>
+              </ul>
+              
+              Simulation outputs are never stored on disc. They are sent by the clients, and consumed by the server.
+              Melissa is built around two key concepts: iterative statistics algorithms and asynchronous client/server model for data transfer.
+              This allows to compute statistics maps on every mesh element for every timestep.
+            </p>
+          </section>
         </div>
-        <div class="header">
-        <div class="headertitle">
-            <div class="title">Modular External Library for In Situ Sensitivity Analysis
-            </div>
-            Melissa code will be available on <a href="https://github.com/melissa-sa/melissa" title="Melissa repository">this github repo</a> before Supercomputing 2017
-        </div>
-        </div><!--header-->
     </body>
 </html>
 

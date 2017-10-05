@@ -23,209 +23,413 @@
         </tbody>
       </table>
     </div>
-    <div id="navrow1" class="tabs">
+    <nav id="navrow1" class="tabs">
+     <a href="index.html"><div id="melissa">Melissa</div></a>
       <ul class="tablist">
-        <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-        <li class="current"><a href="getting_started.html"><span>Getting Started</span></a></li>
+        <li class="current"><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
+        <ul class="tablist2">
+            <li><a href="#install"><span>Installation</span></a></li>
+            <li><a href="#api"><span>Melissa&#160;API</span></a></li>
+            <li><a href="#launcher"><span>Melissa&#160;Launcher</span></a></li>
+        </ul>
+        <li><a href="tutorial.html"><span>Tutorial</span></a></li>
         <li><a href="refcard.html"><span>Refcard</span></a></li>
-        <li><a href="doxygen.html"><span>Doxygen</span></a></li>
+        <li><a href="doxygen.html"><span>Documentation</span></a></li>
+        <li><a href="contacts.html"><span>Contacts</span></a></li>
         <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
       </ul>
-    </div>
-    <div id="nav-path" class="navpath">
+    </nav>
+    <div id="contener1">
+<!--    <div id="nav-path" class="navpath">
       <ul>
-        <li class="navelem_current"><!--<a class="el" href="getting_started.html">--><button id="start" type="button">Get the Software</button><!--</a>--></li>
-        <li class="navelem"><!--<a class="el" href="getting_started.html">--><button id="install" type="button">Install</button><!--</a>--></li>
-        <li class="navelem"><!--<a class="el" href="tuto.html">--><button id="tuto" type="button">Step-by-step Tutorial</button><!--</a>--></li>
+        <li class="navelem"><a class="el" href="start.html"><button id="start" type="button">Get the Software</button></a></li>
+        <li class="navelem"><a class="el" href="install.html"><button id="install" type="button">Install</button></a></li>
+        <li class="navelem_current"><a class="el" href="tutorial.html"><button id="tuto" type="button">Step-by-step Tutorial</button></a></li>
       </ul>
-    </div>
-    <div class="header">
+    </div>-->
+<!--    <div class="header">
       <div class="headertitle">
-        <div class="title">
-        
-        </div>
         <p>
-      
         </p>
-        <button id="next" type="button">next</button>
       </div>
-    </div><!--header-->
-  
-    <div id="tuto_text" class="text">
-      <h3>Overview</h3>
+    </div>-->
+ 
+    <section id="tuto_text" class="text">
+      <h1>Getting Started</h1>
+      <h2 id="install">Installation</h2>
       <p>
-        In this section, we will use Melissa to perform a global sensitivity analysis on a very simple case: a heat equation solver.<br />
-        This example is available on the repository <code class="code">melissa/source/examples/heat_example</code>.
-        It solves the heat equation on a regular 2D grid, with backward Euler method.<br />
-        The original source codes are <code class="code">heat_base.c</code> in C and <code class="code">heat_base.f90</code> in Fortran.<br />
-        We will go through Melissa integration step by step in these examples.
-        The final result is available in <code class="code">heat.c</code>, <code class="code">heat.f90</code> and <code class="code">heat_launcher.py</code>, and is compiled with Melissa if the option <code class="code">-DBUILD_EXAMPLES=ON</code> is given to CMake.
+        First, download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>.<br />
+        Melissa is a CMake project.
+        To install Melissa from the sources, you will need CMake and PkgConfig.
+        If you don't have ZeroMQ installed, CMake will download and install it for you.<br />
+        From the <code class="code">Melissa</code> root directory:
+        <pre class="prettyprint"><code class="lang-bash">
+  mkdir build
+  cd build
+  cmake ../source
+  make
+  make install
+        </code></pre>
       </p>
-      <h3>General Description</h3>
-      <p>
+      <h3 id="options">CMake options</h3>
+      A list of usefull CMake options:
+        <ul>
+          <li><code class="code">-DBUILD_WITH_MPI</code> (default: ON)</li>
+          Enables MPI.
+          <li><code class="code">-DBUILD_DOCUMENTATION</code> (default: OFF)</li>
+          If Doxygen is found, builds the Doxygen documentation.
+          <li><code class="code">-DBUILD_EXAMPLES</code> (default: ON)</li>
+          Compile the heat equation solver examples.
+          <li><code class="code">-DBUILD_EXAMPLES_WITH_MPI</code> (default: ON)</li>
+          Complie the examples with MPI.
+          <li><code class="code">-DBUILD_SHARED_LIBS</code> (default: OFF)</li>
+          Builds Melissa libraries as shared libraries.
+          <li><code class="code">-DBUILD_TESTING</code> (default: ON)</li>
+          Builds Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code>.
+          <li><code class="code">-DBUILD_WITH_OpenMP</code> (default: OFF)</li>
+          Enables OpenMP for Melissa Server.
+          <li><code class="code">-DBUILD_WITH_PROBES</code> (default: OFF)</li>
+          Adds some debug outputs to Melissa server.
+          <li><code class="code">-DCMAKE_INSTALL_PREFIX</code> (default: '../install')</li>
+          Defines melissa install directory.
+          <li><code class="code">-DINSTALL_ZMQ</code> (default: ON)</li>
+          Enable CMake to install ZeroMQ. If you already have ZeroMQ manualy installed, put it to OFF and use the option described after:
+          <li><code class="code">-DZMQ_DIR</code></li>
+          Sets the path to your ZeroMQ install directory. If the directory is not found, the previous option will be turned to ON and ZeroMQ will be downloaded and installed.
+        </ul>
       </p>
-      <h3>Fortran Solver</h3>
+      <h2 id="api">Melissa API</h2>
       <p>
+        Select your simulation type and language:
       </p>
-      <h3>C Solver</h3>
+      <div class="fieldsets">
+        <fieldset class="lang" id="par">
+          <legend>Simulation type</legend> <!-- Titre du fieldset -->
+          <p>
+            <input type="radio" name="MPI" value="nompi" id="MPI" checked/> <label for="MPI">MPI    </label><br />
+            <input type="radio" name="MPI" value="mpi" id="noMPI" /> <label for="noMPI">No MPI</label><br />
+          </p>
+        </fieldset>
+        <fieldset class="lang" id="lang">
+          <legend>Simulation language</legend> <!-- Titre du fieldset -->
+          <p>
+            <input type="radio" name="lang" value="f" id="C" checked/> <label for="C">C</label><br />
+            <input type="radio" name="lang" value="c" id="Fortran" /> <label for="Fortran">Fortran</label><br />
+          </p>
+        </fieldset>
+      </div>
       <p>
-        First, one have to define a way to pass the parameter sample ID and the Sobol rank to the simulation code.
-        Melissa will need it to identify which simulation sent the data.
-        In our case, we will do that by adding arguments to the command line.<br />
-        We first store the sample ID and the Sobol's rank of the simulation in two integers.
-        The solver can then take from one to five input parameters, so we store them in five doubles.
+      Melissa API is a library composed of tree functions, to be integrated in the simulation code. To use the Melissa functions, you have to link <code class="code"><span class="nompi">melissa_api_no_mpi</span><span class="mpi">melissa_api</span></code> and include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> to your simulation code.
+        <pre class="prettyprint c mpi"><code class="lang-c">
+  #include &#60melissa_api.h&#62
+        </code></pre>
+        <pre class="prettyprint c nompi"><code class="lang-c">
+  #include &#60melissa_api_no_mpi.h&#62
+        </code></pre>
+        <pre class="prettyprint f"><code class="lang-fortran">
+  include "melissa_api.f90"
+        </code></pre>
+       
+       
+       <h3>
+        <span class="mpi">
+  melissa_init
+        </span>
+        <span class="nompi">
+  melissa_init_no_mpi</span>
+       </h3>
+       <p>Prototype:</p>
+        <pre class="prettyprint c mpi"><code class="lang-c">
+  void melissa_init(const int *local_vect_size,
+                    const int *comm_size,
+                    const int *rank,
+                    const int *sobol_rank,
+                    const int *sobol_group,
+                    MPI_Comm  *comm,
+                    const int *coupling);
+        </code></pre>
+        <pre class="prettyprint f mpi"><code class="lang-fortran">
+  subroutine melissa_init(local_vect_size,&
+                          comm_size,&
+                          rank,&
+                          sobol_rank,&
+                          sobol_group,&
+                          comm,&
+                          coupling)
+  integer :: local_vect_size
+  integer :: comm_size
+  integer :: rank
+  integer :: sobol_rank
+  integer :: sobol_group
+  integer :: comm
+  integer :: coupling
+        </code></pre>
+        <pre class="prettyprint c nompi"><code class="lang-c">
+  void melissa_init_no_mpi(const int *vect_size,
+                           const int *sobol_rank,
+                           const int *sobol_group);
+        </code></pre>
+        <pre class="prettyprint f nompi"><code class="lang-fortran">
+  subroutine melissa_init_no_mpi(vect_size,&
+                                 sobol_rank,&
+                                 sobol_group)
+  integer :: vect_size
+  integer :: sobol_rank
+  integer :: sobol_group
+        </code></pre>
+       
+        variables:
+        <ul>
+          <li><code class="code">vect_size</code>: the size of the local result vector</li>
+          <span class="mpi"><li><code class="code">comm_size</code>: the size of the local MPI communicator</li></span>
+          <span class="mpi"><li><code class="code">rank</code>: the process rank in the local MPI communicator</li></span>
+          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group. Should be 0 if Sobol' indices are not computed.</li>
+          <span class="mpi"><li><code class="code">sobol_group</code>: the ID of the group in the study. A group is oune simulation if Sobol' indices are not computed.</li></span>
+          <span class="mpi"><li><code class="code">comm</code>: the local MPI communicator</li></span>
+          <li><code class="code">coupling</code>: 1 if the simulations in a group are in the same MPI MPMD communicator, 0 otherwhise. Not used if Sobol' indices are not computed.</li>
+        </ul>
+<!--        <ul>
+          <li><code class="code">n</code>: the current iteration number</li>
+          <li><code class="code">field_name</code>: the name of the field sent</li>
+          <li><code class="code">u</code>: the vector to send to Melissa Server</li>
+          <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
+          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
+          <li><code class="code">sample_id</code>: the ID of the group in the study</li>
+        </ul>-->
+       <h3>
+        <span class="mpi">
+  melissa_init
+        </span>
+        <span class="nompi">
+  melissa_init_no_mpi</span>
+       </h3>
+       
+       
+       <p>Prototype:</p>
+        <pre class="prettyprint c mpi"><code class="lang-c">
+  void melissa_send(const int  *time_step,
+                    const char *field_name,
+                    double     *send_vect,
+                    const int  *rank,
+                    const int  *sobol_rank,
+                    const int  *sobol_group);
+        </code></pre>
+        <pre class="prettyprint f mpi"><code class="lang-fortran">
+  subroutine melissa_send(time_step,&
+                          field_name,&
+                          send_vect,&
+                          rank,&
+                          sobol_rank,&
+                          sobol_group)
+  integer                :: time_step
+  character,dimension(*) :: field_name
+  real*8,dimension(*)    :: send_vect
+  integer                :: rank
+  integer                :: sobol_rank
+  integer                :: sobol_group
+        </code></pre>
+        <pre class="prettyprint c nompi"><code class="lang-c">
+  void melissa_send_no_mpi(const int  *time_step,
+                           const char *field_name,
+                           double     *send_vect,
+                           const int  *sobol_rank,
+                           const int  *sobol_group);
+        </code></pre>
+        <pre class="prettyprint f nompi"><code class="lang-c">
+  subroutine melissa_send_no_mpi(time_step,&
+                                 field_name,&
+                                 send_vect,&
+                                 sobol_rank,&
+                                 sobol_group)
+  integer                :: time_step
+  character,dimension(*) :: field_name
+  real*8,dimension(*)    :: send_vect
+  integer                :: sobol_rank
+  integer                :: sobol_group
+        </code></pre>
+       
+        <ul>
+          <li><code class="code">time_step</code>: statistics timestep</li>
+          <li><code class="code">field_name</code>: the name of the field sent</li>
+          <li><code class="code">send_vect</code>: the vector to send to Melissa Server</li>
+          <span class="mpi"><li><code class="code">rank</code>: the process rank in the local MPI communicator</li></span>
+          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
+          <li><code class="code">sobol_group</code>: the ID of the group in the study</li>
+        </ul>
         
-        <pre class="prettyprint"><code class="lang-c">
-  int sample_id = 0;
-  int sobol_rank = 0;
-  double param[5];
-
-  if (argc < 4)
-  {
-      fprintf (stderr, "Missing parameter");
-      return -1;
-  }
-  sobol_rank = (int)strtol(argv[1], NULL, 10);
-  sample_id = (int)strtol(argv[2], NULL, 10);
-  param[0] = strtod(argv[3], NULL);
-
-  for (n=0; n<4; n++)
-  {
-    param[n+1] = param[0];
-    if (argc > n+4)
-    {
-       param[n+1] = strtod(argv[n+4], NULL);
-    }
-  }
+       <h3>
+         melissa_finalize
+       </h3>
+       <p>Prototype:</p>
+        <pre class="prettyprint c"><code class="lang-c">
+  void melissa_finalize();
         </code></pre>
-
-        In the case of Sobol's indices computation, one must define the way simulations are connected inside a group.
-        If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
-        Links between simulations will be MPI communications in that case.
-        Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ.
-        This is called the "not coupled" case.<br />
-        In the heat solver, we can easily split MPI communicator, so we will use a coupled case.
-        Define a new integer variable, with a value of <code class="code">1</code>:
-        <pre class="prettyprint"><code class="lang-c">
-  int coupling = 1;
+        <pre class="prettyprint f"><code class="lang-c">
+  subroutine melissa_finalize();
         </code></pre>
+        
+     
+      <h2 id="launcher">Melissa Launcher</h2>
+      <p>
+        Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.<br />
+        This is done by giving the launcher some functions and variables through a python file.
+        The file must be called <code class="code">options.py</code>. Take <code class="code">launcher/options.py</code> as a base for this file.
+        There are six sets of variables to define, as dictionaries.
+        <ul>
+          <li><code class="code">GLOBAL_OPTIONS</code>: contains informations about your environement.<br />
+          <li><code class="code">STUDY_OPTIONS</code>: sets the parameters of your sensitivity study. They will be used by the launcher to generate its internal structures for the study management.</li>
+          <li><code class="code">SERVER_OPTIONS</code> and <code class="code">SIMULATIONS_OPTIONS</code>: sets some parameters to launch the server and simulations jobs.</li>
+          <li><code class="code">MELISSA_STATS</code>: are used to activate (or not) the computations of the iterative statistics.</li>
+          <li><code class="code">USER_FUNCTIONS</code>: are pointers to user defined functions, used by the launcher. Some of them are optional, others are mandatory. We will describe these functions in this section.</li>
+        </ul>
+        Note that you can add fields to the option dictionaries, and they can be used in the user defined functions.
       </p>
-      The first Melissa function can be called before the main <code class="code">for</code> loop.
-      It takes seven arguments:
+      <h3>Functions</h3>
+      Melissa Launcher needs the mandatory functions to be defined. Otherwhise, it will return without launching the study.
+      The optional functions are ignored if they are not defined by the user.
       <ul>
-        <li><code class="code">vect_size</code>: the size of the local result vector</li>
-        <li><code class="code">np</code>: the size of the local MPI communicator</li>
-        <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
-        <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
-        <li><code class="code">sample_id</code>: the ID of the group in the study</li>
-        <li><code class="code">comm</code>: the local MPI communicator</li>
-        <li><code class="code">coupling</code>: the coupling variable</li>
-      </ul>
-        <pre class="prettyprint"><code class="lang-c">
-  melissa_init (&vect_size, &np, &me, &sobol_rank, &sample_id, &comm, &coupling);
-        </code></pre>
-      This function has to be called once by every process.
-      Inside the main loop, the result vector is updated by the <code class="code">conjgrad</code> function.
-      Send this updated vector to Melissa Server by calling <code class="code">melissa_send</code> right after the <code class="code">conjgrad</code> function.
-      This function takes six arguments:
-      <ul>
-        <li><code class="code">n</code>: the iteration number</li>
-        <li><code class="code">field_name</code>: the name of the field sent</li>
-        <li><code class="code">u</code>: the vector to send to Melissa Server</li>
-        <li><code class="code">me</code>: the process rank in the local MPI communicator</li>
-        <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
-        <li><code class="code">sample_id</code>: the ID of the group in the study</li>
-      </ul>
-        <pre class="prettyprint"><code class="lang-c">
-  conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon, &i1, &in, &np, &me, &next, &previous, &fcomm);
-  melissa_send (&n, field_name, u, &me, &sobol_rank, &sample_id);
-        </code></pre>
-      
-    </div>
-  
-    <script>
-      <!--
-      
-      var start = document.getElementById('start');
-      var install = document.getElementById('install');
-      var tuto = document.getElementById('tuto');
-      var next = document.getElementById('next');
-      var header = document.getElementsByClassName('header');
-      var headertitle = header[0].getElementsByClassName('title');
-      var header_p = header[0].getElementsByTagName('p');
-      var current = "start"
-  //     function base()
-  //     {
-  //         var titletext = document.createTextNode("Getting Started");
-  //         headertitle[0].replaceChild(titletext, headertitle[0].firstChild);
-  //         var text = document.createTextNode("You can download Melissa sources ");
-  //         header_p[0].replaceChild(text, header_p[0].firstChild);
-  // //         header_p[0].innerHTML = "Step-by-step tutorial";
-  //     }
-  
-      function $_GET(param)
-      {
-          var vars = {};
-          window.location.href.replace( location.hash, '' ).replace( 
-              /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-              function( m, key, value )
-              { // callback
-                  vars[key] = value !== undefined ? value : '';
-              }
-          );
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code> (optional):</pre></li>
+        This function is called only once, before starting the study. It is called from the dirrectory set in <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter_set']</code> (mandatory):</pre></li>
+        This function is used by Melissa launcher to draw simulations parameter sets. it must return a Numpy array of floats of the size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_group']</code> (optional):</pre></li>
+        This function is called once for each group in the study, before launching the study. Its behavior is the same as <code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code>.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_simulation']</code> (optional):</pre></li>
+        This function is called once for each simulation in the study, before launching the study. Its behavior is the same as <code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code>.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code> (mandatory):</pre></li>
+        Once every simulation, group and parameter set is defined, Melissa Launcher uses this function to launch Melissa Server. The function takes a <code class="code">Server</code> object for argument, and needs to set the server job ID in <code class="code">server.job_id</code>.
+        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID. The server command line options are in <code class="code">server.cmd_opt</code>, you should not modify it.<br />
+        An example for a Slurm cluster:
+        <pre class="prettyprint"><code class="lang-python">
+  import subprocess
 
-          if ( param ) {
-                return vars[param] ? vars[param] : null;        
-          }
-          return vars;
-      }
-      function gotonext()
-      {
-          if (current == "start")
-          {
-              installf();
-          }
-          else if (current == "install")
-          {
-              tutof();
-          }
-      }
-      function startf()
-      {
-          current = "start"
-          var titletext = document.createTextNode("Getting Started");
-          headertitle[0].replaceChild(titletext, headertitle[0].firstChild);
-          header_p[0].innerHTML ="You can download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>. Melissa is a CMake project.";
-          document.getElementById('tuto_text').style.display = 'none';
-  //         document.getElementById('next').style.visibility = 'visible';
-      }
-      function installf()
-      {
-          current = "install"
-          headertitle[0].innerHTML = "Install";
-          header_p[0].innerHTML = "CMake install";
-          document.getElementById('tuto_text').style.display = 'none';
-  //         document.getElementById('next').style.visibility = 'visible';
-      }
-      function tutof()
-      {
-          current = "tuto"
-          headertitle[0].innerHTML = "Tutorial";
-          header_p[0].innerHTML = "Step-by-step with the heat equation solver";
-          document.getElementById('tuto_text').style.display = 'block';
-          document.getElementById('next').style.visibility="hidden";
-      }
+  def launch_server(server):
+      os.chdir(GLOBAL_OPTIONS['working_directory'])
       
-      startf();
-      next.addEventListener('click', gotonext )
+      # create a job script
+      fichier=open("run_server.sh", "w")
+      contenu  = "#!/bin/bash \n"
+      contenu  = "# Example with Slurm \n"
+      contenu += "#SBATCH -N 4 \n"
+      contenu += "#SBATCH --job-name=Melissa_server \n"
+      contenu += "mkdir stats${SLURM_JOB_ID}.resu \n"
+      contenu += "cd stats${SLURM_JOB_ID}.resu \n"
+      contenu += "mpirun "+server.path+"/server "+server.cmd_opt+" & \n"
+      contenu += "wait %1 \n"
+      contenu += "cd "+workdir+" \n"
+      fichier.write(contenu)
+      fichier.close()
       
-      start.addEventListener('click', startf );
+      # run the job script
+      proc = subprocess.Popen('sbatch "./run_server.sh"',
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE,
+                              shell=True,
+                              universal_newlines=True)
+                              
+      # get the job ID
+      (out, err) = proc.communicate()
+      server.job_id = out.split()[-1]
+
+  USER_FUNCTIONS['launch_server'] = launch_server
+        </code></pre>
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_simulation']</code> (mandatory):</pre></li>
+        This function is used to launch simulations. In the case of Sobol' indices computation, a group is considered as a simulation. The function takes a <code class="code">Simulation</code> object for argument, and needs to set the simulation job ID in <code class="code">simulation.job_id</code>.
+        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID.
+        You have to copy the file called "server_name.txt" from the directory <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code> to the location where the simulation will run. The simulation will read it to retrieve the server node name in order to contact it.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_server_job']</code> (mandatory):</pre></li>
+        This function is called while the server is running. It checks the job's status in the scope of the fault tolerance mechanism.
+        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Server</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_simulation_job']</code> (mandatory):</pre></li>
+        This function is called while a simulation is running. It checks the job's status in the scope of the fault tolerance mechanism.
+        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Simulation</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> (mandatory):</pre></li>
+        This function is calles by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
+        The job ID is defined in <code class="code">job.job_id</code>.<br />
+        An example with a Slurm job:
+        <pre class="prettyprint"><code class="lang-python">
+  import os
   
-      install.addEventListener('click', installf );
-  
-      tuto.addEventListener('click', tutof );
-  
-      //-->
+  def cancel_job(job):
+      os.system('scancel '+job.job_id)
+      
+  USER_FUNCTIONS['cancel_job'] = cancel_job
+        </code></pre>
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_server']</code> (optional):</pre></li>
+        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code>. It is used to reboot the server in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">launch_server</code> function by default.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_simulation']</code> (optional):</pre></li>
+        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_simulation']</code>. It is used to reboot a simulation (or a group of simulations) in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">USER_FUNCTIONS['launch_simulation']</code> function by default.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
+        Melissa Launcher calls this function right before launching each simulation job. You can make it block until you want to launch the next simulation.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
+        This function is called once at the end of the study. It does nothing by default.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['finalize']</code> (optional):</pre></li>
+        The same as <code  class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code>.
+      </ul>
+     
+    </section>
+    </div>
+    <script>
+        <!--
+        var par = document.querySelector('input[name="MPI"]:checked').value;
+        var lang = document.querySelector('input[name="lang"]:checked').value;
+       
+        var element1 = document.getElementById('par');
+        element1.addEventListener('change', plop );
+        var element2 = document.getElementById('lang');
+        element2.addEventListener('change', plop );
+       
+        function plop()
+        {
+            par = document.querySelector('input[name="MPI"]:checked').value;
+            lang = document.querySelector('input[name="lang"]:checked').value;
+            var i, blocks;
+            blocks = document.getElementsByClassName('c');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = '';
+            }
+            blocks = document.getElementsByClassName('f');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = '';
+            }
+            blocks = document.getElementsByClassName('mpi');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = '';
+            }
+            blocks = document.getElementsByClassName('nompi');
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = '';
+            }
+            blocks = document.getElementsByClassName(par);
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'none';
+            }
+            blocks = document.getElementsByClassName(lang);
+            for (i = 0; i < blocks.length ; i++)
+            {
+                blocks[i].style.display = 'none';
+            }
+        }
+        plop();
+        //-->
     </script>
   </body>
 </html>

@@ -24,39 +24,29 @@
         </tbody>
       </table>
     </div>
-    <div id="navrow1" class="tabs">
-      <ul class="tablist">
-        <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-        <li class="current"><a href="tutorial.html"><span>Getting Started</span></a></li>
-        <li><a href="refcard.html"><span>Refcard</span></a></li>
-        <li><a href="doxygen.html"><span>Doxygen</span></a></li>
-        <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
-      </ul>
-    </div>
-    <div id="nav-path" class="navpath">
-      <ul>
-        <li class="navelem"><a class="el" href="start.html"><button id="start" type="button">Get the Software</button></a></li>
-        <li class="navelem"><a class="el" href="install.html"><button id="install" type="button">Install</button></a></li>
-        <li class="navelem_current"><a class="el" href="tutorial.html"><button id="tuto" type="button">Step-by-step Tutorial</button></a></li>
-      </ul>
-    </div>
-    <div class="header">
-      <div class="headertitle">
-        <div class="title">
-          Tutorial
-        </div>
-        <p>
-          Step-by-step with the heat equation solver
-        </p>
-        <a href="install.html"><button id="prev" type="button">previous</button></a><button id="next" type="button">next</button>
-        <script>
-          document.getElementById('next').style.visibility="hidden";
-        </script>
-      </div>
-    </div><!--header-->
+  <nav id="navrow1" class="tabs">
+   <a href="index.html"><div id="melissa">Melissa</div></a>
+    <ul class="tablist">
+      <li><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
+      <li class="current"><a href="tutorial.html"><span>Tutorial</span></a></li>
+        <ul class="tablist2">
+            <li><a href="#sbs"><span>Overview</span></a></li>
+            <li><a href="#api"><span>Instrumentation</span></a></li>
+            <li><a href="#launcher"><span>Melissa&#160;Launcher</span></a></li>
+        </ul>
+      <li><a href="refcard.html"><span>Refcard</span></a></li>
+      <li><a href="doxygen.html""><span>Documentation</span></a></li>
+      <li><a href="contacts.html"><span>Contacts</span></a></li>
+      <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
+
+      </li>
+    </ul>
+  </nav>
  
-    <div id="tuto_text" class="text">
-      <h2>Overview</h2>
+    <div id="contener1">
+    <section id="tuto_text" class="text">
+      <h1>Tutorial</h1>
+      <h2 id="sbs">Step-by-step tutorial with the heat equation solver</h2>
       <p>
         In this section, we will use Melissa to perform a global sensitivity analysis on a very simple case: a heat equation solver.<br />
         This example is available on the folder <code class="code">source/examples/heat_example</code>.
@@ -67,20 +57,22 @@
         Select your simulation type and language:
       </p>
 <!--       <form method="post" action="traitement.php"> -->
-      <fieldset id="par">
-        <legend>Simulation type</legend> <!-- Titre du fieldset -->
-        <p>
-          <input type="radio" name="MPI" value="nompi" id="MPI" checked/> <label for="MPI">MPI    </label><br />
-          <input type="radio" name="MPI" value="mpi" id="noMPI" /> <label for="noMPI">No MPI</label><br />
-        </p>
-      </fieldset>
-      <fieldset id="lang">
-        <legend>Simulation language</legend> <!-- Titre du fieldset -->
-        <p>
-          <input type="radio" name="lang" value="f" id="C" checked/> <label for="C">C</label><br />
-          <input type="radio" name="lang" value="c" id="Fortran" /> <label for="Fortran">Fortran</label><br />
-        </p>
-      </fieldset>
+      <div class="fieldsets">
+        <fieldset class="lang" id="par">
+          <legend>Simulation type</legend> <!-- Titre du fieldset -->
+          <p>
+            <input type="radio" name="MPI" value="nompi" id="MPI" checked/> <label for="MPI">MPI    </label><br />
+            <input type="radio" name="MPI" value="mpi" id="noMPI" /> <label for="noMPI">No MPI</label><br />
+          </p>
+        </fieldset>
+        <fieldset class="lang" id="lang">
+          <legend>Simulation language</legend> <!-- Titre du fieldset -->
+          <p>
+            <input type="radio" name="lang" value="f" id="C" checked/> <label for="C">C</label><br />
+            <input type="radio" name="lang" value="c" id="Fortran" /> <label for="Fortran">Fortran</label><br />
+          </p>
+        </fieldset>
+      </div>
       <p>
       The grid is a 10 by 10 square with 100 subdivisions on each axis. The solver takes options from the command line.
       The first option is the initial temperature. It is mandatory. The four next ones are the four borders temperatures (Dirichlet boundary conditions). They are optional, and are set to zero if not defined.<br />
@@ -100,15 +92,15 @@
         </code></pre>
       
       
-      <p/>
+      </p>
 <!--       </form> -->
-      <h2>Melissa API</h2>
+      <h2 id="api">Simulation Code Instrumentation</h2>
       <p>
         To use the heat equation solver with Melissa, we first have to define a way to pass the parameter sample ID and the Sobol rank to the simulation code.
         Melissa will need it to identify which simulation sent the data.
         In our case, we will do that by adding arguments to the command line.<br />
         We first store the sample ID and the Sobol's rank of the simulation in two integers.
-        The solver can then take from one to five input parameters, so we store them in five doubles.
+        The solver can then take from one to five input parameters, stored in five doubles.
        
         <pre class="prettyprint c"><code class="lang-c">
   int sample_id = 0;
@@ -160,7 +152,7 @@
   enddo
         </code></pre>
         <span class="mpi">
-        In the case of Sobol's indices computation, one must define the way simulations are connected inside a group.
+        In the case of Sobol' indices computation, we must define the way simulations are connected inside a group.
         If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
         Links between simulations will be MPI communications in that case.
         Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ.
@@ -174,7 +166,7 @@
   integer :: coupling = 1
         </code></pre>
         </span>
-        To use the Melissa functions, one have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
+        To use the Melissa functions, we have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
         <pre class="prettyprint c mpi"><code class="lang-c">
   #include &#60melissa_api.h&#62
         </code></pre>
@@ -249,7 +241,7 @@
         Link the code to the <code class="code">melissa_api</code> library, and compile it.
       </p>
      
-      <h2>Melissa Launcher</h2>
+      <h2 id="launcher">Melissa Launcher</h2>
       <p>
         Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.<br />
         This is done by giving the launcher some functions and variables through a python file.
@@ -264,105 +256,9 @@
         </ul>
         Note that you can add fields to the option dictionaries, and they can be used in the user defined functions.
       </p>
-      <h3>Functions</h3>
-      Melissa Launcher needs the mandatory functions to be defined. Otherwhise, it will return without launching the study.
-      The optional functions are ignored if they are not defined by the user.
-      <ul>
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code> (optional):</pre></li>
-        This function is called only once, before starting the study. It is called from the dirrectory set in <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter_set']</code> (mandatory):</pre></li>
-        This function is used by Melissa launcher to draw simulations parameter sets. it must return a Numpy array of floats of the size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_group']</code> (optional):</pre></li>
-        This function is called once for each group in the study, before launching the study. Its behavior is the same as <code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_simulation']</code> (optional):</pre></li>
-        This function is called once for each simulation in the study, before launching the study. Its behavior is the same as <code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code> (mandatory):</pre></li>
-        Once every simulation, group and parameter set is defined, Melissa Launcher uses this function to launch Melissa Server. The function takes a <code class="code">Server</code> object for argument, and needs to set the server job ID in <code class="code">server.job_id</code>.
-        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID. The server command line options are in <code class="code">server.cmd_opt</code>, you should not modify it.<br />
-        An example for a Slurm cluster:
-        <pre class="prettyprint"><code class="lang-python">
-  import subprocess
-
-  def launch_server(server):
-      os.chdir(GLOBAL_OPTIONS['working_directory'])
-      
-      # create a job script
-      fichier=open("run_server.sh", "w")
-      contenu  = "#!/bin/bash \n"
-      contenu  = "# Example with Slurm \n"
-      contenu += "#SBATCH -N 4 \n"
-      contenu += "#SBATCH --job-name=Melissa_server \n"
-      contenu += "mkdir stats${SLURM_JOB_ID}.resu \n"
-      contenu += "cd stats${SLURM_JOB_ID}.resu \n"
-      contenu += "mpirun "+server.path+"/server "+server.cmd_opt+" & \n"
-      contenu += "wait %1 \n"
-      contenu += "cd "+workdir+" \n"
-      fichier.write(contenu)
-      fichier.close()
-      
-      # run the job script
-      proc = subprocess.Popen('sbatch "./run_server.sh"',
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              shell=True,
-                              universal_newlines=True)
-                              
-      # get the job ID
-      (out, err) = proc.communicate()
-      server.job_id = out.split()[-1]
-
-  USER_FUNCTIONS['launch_server'] = launch_server
-        </code></pre>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_simulation']</code> (mandatory):</pre></li>
-        This function is used to launch simulations. In the case of Sobol' indices computation, a group is considered as a simulation. The function takes a <code class="code">Simulation</code> object for argument, and needs to set the simulation job ID in <code class="code">simulation.job_id</code>.
-        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID.
-        You have to copy the file called "server_name.txt" from the directory <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code> to the location where the simulation will run. The simulation will read it to retrieve the server node name in order to contact it.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_server_job']</code> (mandatory):</pre></li>
-        This function is called while the server is running. It checks the job's status in the scope of the fault tolerance mechanism.
-        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Server</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_simulation_job']</code> (mandatory):</pre></li>
-        This function is called while a simulation is running. It checks the job's status in the scope of the fault tolerance mechanism.
-        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Simulation</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> (mandatory):</pre></li>
-        This function is calles by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
-        The job ID is defined in <code class="code">job.job_id</code>.<br />
-        An example with a Slurm job:
-        <pre class="prettyprint"><code class="lang-python">
-  import os
-  
-  def cancel_job(job):
-      os.system('scancel '+job.job_id)
-      
-  USER_FUNCTIONS['cancel_job'] = cancel_job
-        </code></pre>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_server']</code> (optional):</pre></li>
-        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code>. It is used to reboot the server in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">launch_server</code> function by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_simulation']</code> (optional):</pre></li>
-        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_simulation']</code>. It is used to reboot a simulation (or a group of simulations) in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">USER_FUNCTIONS['launch_simulation']</code> function by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
-        Melissa Launcher calls this function right before launching each simulation job. You can make it block until you want to launch the next simulation.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
-        This function is called once at the end of the study. It does nothing by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['finalize']</code> (optional):</pre></li>
-        The same as <code  class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code>.
-      </ul>
-      
       An example <code class="code">options.py</code> file is available in <code class="code">examples/heat_example</code>. Use it as a base to define your own <code class="code">options.py</code> file.
      
-      <h2>Launch the study</h2>
+      <h3 id="run">Launch the study</h3>
       
       To launch a study with the heat equation solver, call the launcher with the path to your <code class="code">option.py</code> file:
         <pre class="prettyprint"><code class="lang-bash">
@@ -371,6 +267,7 @@
         </code></pre>
         
      
+    </section>
     </div>
     <script>
         <!--
