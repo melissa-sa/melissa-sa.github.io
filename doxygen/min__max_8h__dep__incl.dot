@@ -1,0 +1,32 @@
+digraph "/home/tterraz/avido/melissa/Melissa/source/stats/min_max.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/stats/min_max.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/stats/min_max.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$min__max_8c.html",tooltip="Min and max related functions. "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_data.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$melissa__data_8h.html"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/compute_stats.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$compute__stats_8c.html",tooltip="Functions called by the server. "];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_fields.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$melissa__fields_8h.html"];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_fields.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$melissa__fields_8c.html",tooltip="Routines related to the melissa_fields structure. "];
+  Node5 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/server.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$server_8h.html"];
+  Node3 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_io.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$melissa__io_8h.html"];
+  Node8 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/compute_stats.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$compute__stats_8h.html"];
+  Node9 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_data.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$melissa__data_8c.html",tooltip="Routines related to the melissa_data structure. "];
+  Node3 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_io.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$melissa__io_8c.html",tooltip="Inputs, outputs and checkpoints. "];
+  Node3 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_options.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$melissa__options_8c.html",tooltip="Parse commande line to get stats options. "];
+  Node3 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}
