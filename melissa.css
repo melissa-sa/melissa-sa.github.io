@@ -312,3 +312,8 @@ iframe
     height: 800px;
     width: 100%;
 }
+
+hr
+{
+    color: rgba(0, 100, 10, 0.2);
+}
