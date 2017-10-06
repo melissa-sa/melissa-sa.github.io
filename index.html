@@ -40,18 +40,25 @@
             </p>
             <h2>Overview</h2>
             <p>
-              Melissa is an in situ solution for sensitivity analysis.
+              Melissa is an in situ solution for sensitivity analysis.<br />
               It implements iterative algorithms to compute spatio-temporal statistic fields over results of large scale sensitivity studies.
+              Melissa is built around two key concepts: iterative statistics algorithms and asynchronous client/server model for data transfer.
+              Simulation outputs are never stored on disc. They are sent by the simulations to a parallel server, which agregate them to the statistic fields in an iterative fashion, and then trow them away.
+              This allows to compute statistics maps on every mesh element for every timestep on a full scale study.
+            </p>
+            <h2>Melissa Workflow</h2>
+            <p>
+              
               Melissa rely on a client/server architecture, composed of three main modules:
               <ul>
-                <li> Melissa Server: an independent parallel executable. It receives data from the simulations, updates iterative statistics as soon as possible, then trow data away.</li>
-                <li> Melissa API: a shared library to be linked within the simulation code. It mainly transmit simulation data to Melissa Server at each timestep. The simulations of the sensitivity analysis become the \textit{clients} of Melissa Server.</li>
-                <li> Melissa Master: A Python script in charge of generating and managing the whole global sensitivity analysis.</li>
+                <li> <code class="code">Melissa Server</code>: an independent parallel executable. It receives data from the simulations, updates iterative statistics as soon as possible, then trow data away.</li>
+                <li> <code class="code">Melissa API</code>: a shared library to be linked within the simulation code. It forwards simulation data to Melissa Server. The simulations of the sensitivity analysis become the clientsof Melissa Server.</li>
+                <li> <code class="code">Melissa Master</code>: A Python script in charge of generating and managing the whole global sensitivity analysis.</li>
               </ul>
-              
-              Simulation outputs are never stored on disc. They are sent by the clients, and consumed by the server.
-              Melissa is built around two key concepts: iterative statistics algorithms and asynchronous client/server model for data transfer.
-              This allows to compute statistics maps on every mesh element for every timestep.
+              <figure>
+                <img src="src/workflow.png" alt="Melissa workflow" title="Melissa workflow" width="80%"/>
+                <figcaption>Melissa Workflow on a Cluster</figcaption>
+              </figure>
             </p>
           </section>
         </div>

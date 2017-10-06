@@ -317,3 +317,19 @@ hr
 {
     color: rgba(0, 100, 10, 0.2);
 }
+
+figure
+{
+    text-align: center;
+    padding: 10px;
+}
+
+figure figcaption
+{
+    text-decoration: underline;
+}
+
+figure img
+{
+    padding: 10px;
+}
