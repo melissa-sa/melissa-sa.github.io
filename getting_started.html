@@ -85,12 +85,12 @@
           <li><code class="code">-DBUILD_SHARED_LIBS</code> (default: OFF)</li>
           Builds Melissa libraries as shared libraries.
           <li><code class="code">-DBUILD_TESTING</code> (default: ON)</li>
-          Builds Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code>.
+          Builds Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code> or <code class="prettyprint lang-bash">ctest</code>.
           <li><code class="code">-DBUILD_WITH_OpenMP</code> (default: OFF)</li>
           Enables OpenMP for Melissa Server.
           <li><code class="code">-DBUILD_WITH_PROBES</code> (default: OFF)</li>
           Adds some debug outputs to Melissa server.
-          <li><code class="code">-DCMAKE_INSTALL_PREFIX</code> (default: '../install')</li>
+          <li><code class="code">-DCMAKE_INSTALL_PREFIX</code> (default: <code class="prettyprint lang-bash">'../install'</code>)</li>
           Defines melissa install directory.
           <li><code class="code">-DINSTALL_ZMQ</code> (default: ON)</li>
           Enable CMake to install ZeroMQ. If you already have ZeroMQ manualy installed, put it to OFF and use the option described after:
