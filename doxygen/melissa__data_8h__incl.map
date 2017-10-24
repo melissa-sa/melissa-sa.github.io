@@ -1,12 +1,12 @@
-<map id="/home/tterraz/avido/melissa/Melissa/source/server/melissa_data.h" name="/home/tterraz/avido/melissa/Melissa/source/server/melissa_data.h">
-<area shape="rect" id="node3" href="$melissa__utils_8h.html" title="melissa_utils.h" alt="" coords="241,184,350,211"/>
-<area shape="rect" id="node5" href="$melissa__options_8h.html" title="melissa_options.h" alt="" coords="147,109,273,136"/>
-<area shape="rect" id="node6" href="$mean_8h.html" title="mean.h" alt="" coords="420,184,485,211"/>
-<area shape="rect" id="node7" href="$variance_8h.html" title="variance.h" alt="" coords="349,109,431,136"/>
-<area shape="rect" id="node8" href="$general__moments_8h.html" title="general_moments.h" alt="" coords="455,109,591,136"/>
-<area shape="rect" id="node9" href="$min__max_8h.html" title="min_max.h" alt="" coords="616,109,703,136"/>
-<area shape="rect" id="node10" href="$threshold_8h.html" title="threshold.h" alt="" coords="727,109,813,136"/>
-<area shape="rect" id="node11" href="$quantile_8h.html" title="quantile.h" alt="" coords="791,184,869,211"/>
-<area shape="rect" id="node12" href="$covariance_8h.html" title="covariance.h" alt="" coords="838,109,934,136"/>
-<area shape="rect" id="node13" href="$sobol_8h.html" title="sobol.h" alt="" coords="1009,109,1073,136"/>
+<map id="melissa_data.h" name="melissa_data.h">
+<area shape="rect" id="node3" href="$melissa__utils_8h.html" title="melissa_utils.h" alt="" coords="241,155,350,181"/>
+<area shape="rect" id="node5" href="$melissa__options_8h.html" title="melissa_options.h" alt="" coords="147,80,273,107"/>
+<area shape="rect" id="node6" href="$mean_8h.html" title="mean.h" alt="" coords="420,155,485,181"/>
+<area shape="rect" id="node7" href="$variance_8h.html" title="variance.h" alt="" coords="349,80,431,107"/>
+<area shape="rect" id="node8" href="$general__moments_8h.html" title="general_moments.h" alt="" coords="455,80,591,107"/>
+<area shape="rect" id="node9" href="$min__max_8h.html" title="min_max.h" alt="" coords="616,80,703,107"/>
+<area shape="rect" id="node10" href="$threshold_8h.html" title="threshold.h" alt="" coords="727,80,813,107"/>
+<area shape="rect" id="node11" href="$quantile_8h.html" title="quantile.h" alt="" coords="791,155,869,181"/>
+<area shape="rect" id="node12" href="$covariance_8h.html" title="covariance.h" alt="" coords="838,80,934,107"/>
+<area shape="rect" id="node13" href="$sobol_8h.html" title="sobol.h" alt="" coords="1009,80,1073,107"/>
 </map>

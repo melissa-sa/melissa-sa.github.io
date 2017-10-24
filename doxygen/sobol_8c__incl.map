@@ -1,7 +1,7 @@
-<map id="/home/tterraz/avido/melissa/Melissa/source/stats/sobol.c" name="/home/tterraz/avido/melissa/Melissa/source/stats/sobol.c">
-<area shape="rect" id="node6" href="$mean_8h.html" title="mean.h" alt="" coords="366,184,431,211"/>
-<area shape="rect" id="node7" href="$variance_8h.html" title="variance.h" alt="" coords="373,109,456,136"/>
-<area shape="rect" id="node8" href="$covariance_8h.html" title="covariance.h" alt="" coords="480,109,576,136"/>
-<area shape="rect" id="node9" href="$sobol_8h.html" title="sobol.h" alt="" coords="600,109,664,136"/>
-<area shape="rect" id="node10" href="$melissa__utils_8h.html" title="melissa_utils.h" alt="" coords="583,184,692,211"/>
+<map id="sobol.c" name="sobol.c">
+<area shape="rect" id="node6" href="$mean_8h.html" title="mean.h" alt="" coords="366,155,431,181"/>
+<area shape="rect" id="node7" href="$variance_8h.html" title="variance.h" alt="" coords="373,80,456,107"/>
+<area shape="rect" id="node8" href="$covariance_8h.html" title="covariance.h" alt="" coords="480,80,576,107"/>
+<area shape="rect" id="node9" href="$sobol_8h.html" title="sobol.h" alt="" coords="600,80,664,107"/>
+<area shape="rect" id="node10" href="$melissa__utils_8h.html" title="melissa_utils.h" alt="" coords="583,155,692,181"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="read_mean" name="read_mean">
-<area shape="rect" id="node2" href="$group__melissa__io.html#ga92cc0d06e2f617b70b490f15a3741e18" title="read_saved_stats" alt="" coords="314,5,439,32"/>
-<area shape="rect" id="node3" href="$covariance_8h.html#ae9402a51c74ee92f171d4fe6c8780bc5" title="read_covariance" alt="" coords="140,107,257,133"/>
+<area shape="rect" id="node2" href="$covariance_8h.html#ae9402a51c74ee92f171d4fe6c8780bc5" title="read_covariance" alt="" coords="140,5,257,32"/>
+<area shape="rect" id="node4" href="$group__melissa__io.html#ga92cc0d06e2f617b70b490f15a3741e18" title="read_saved_stats" alt="" coords="314,107,439,133"/>
 <area shape="rect" id="node5" href="$variance_8h.html#a6867441f5ec83e385bd0b2b018020a4d" title="read_variance" alt="" coords="147,56,250,83"/>
-<area shape="rect" id="node4" href="$sobol_8h.html#a7afc8e0f3d0e11fb3c8d9f10f9406ef9" title="read_sobol_martinez" alt="" coords="305,107,448,133"/>
+<area shape="rect" id="node3" href="$sobol_8h.html#a7afc8e0f3d0e11fb3c8d9f10f9406ef9" title="read_sobol_martinez" alt="" coords="305,5,448,32"/>
 <area shape="rect" id="node6" href="$sobol_8h.html#acfbf302e8caae3cb777c95c41d3f7f1e" title="read_sobol_jansen" alt="" coords="311,56,442,83"/>
 </map>
