@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['threshold_2ec',['threshold.c',['../threshold_8c.html',1,'']]],
-  ['threshold_2eh',['threshold.h',['../threshold_8h.html',1,'']]]
+  ['server_2eh',['server.h',['../server_8h.html',1,'']]],
+  ['sobol_2ec',['sobol.c',['../sobol_8c.html',1,'']]],
+  ['sobol_2eh',['sobol.h',['../sobol_8h.html',1,'']]]
 ];

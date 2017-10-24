@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['server_2eh',['server.h',['../server_8h.html',1,'']]],
-  ['sobol_2ec',['sobol.c',['../sobol_8c.html',1,'']]],
-  ['sobol_2eh',['sobol.h',['../sobol_8h.html',1,'']]]
+  ['quantile_2ec',['quantile.c',['../quantile_8c.html',1,'']]],
+  ['quantile_2eh',['quantile.h',['../quantile_8h.html',1,'']]]
 ];

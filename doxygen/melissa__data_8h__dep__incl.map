@@ -1,0 +1,11 @@
+<map id="/home/tterraz/avido/melissa/Melissa/source/server/melissa_data.h" name="/home/tterraz/avido/melissa/Melissa/source/server/melissa_data.h">
+<area shape="rect" id="node2" href="$compute__stats_8c.html" title="Functions called by the server. " alt="" coords="5,109,168,165"/>
+<area shape="rect" id="node3" href="$melissa__fields_8h.html" title="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_fields.h" alt="" coords="616,109,779,165"/>
+<area shape="rect" id="node4" href="$melissa__fields_8c.html" title="Routines related to the melissa_fields structure. " alt="" coords="336,213,499,269"/>
+<area shape="rect" id="node5" href="$server_8h.html" title="/home/tterraz/avido\l/melissa/Melissa/source\l/server/server.h" alt="" coords="675,213,837,269"/>
+<area shape="rect" id="node6" href="$melissa__io_8h.html" title="/home/tterraz/avido\l/melissa/Melissa/source\l/server/melissa_io.h" alt="" coords="243,109,405,165"/>
+<area shape="rect" id="node7" href="$compute__stats_8h.html" title="/home/tterraz/avido\l/melissa/Melissa/source\l/server/compute_stats.h" alt="" coords="429,109,592,165"/>
+<area shape="rect" id="node8" href="$melissa__data_8c.html" title="Routines related to the melissa_data structure. " alt="" coords="853,109,1016,165"/>
+<area shape="rect" id="node9" href="$melissa__io_8c.html" title="Inputs, outputs and checkpoints. " alt="" coords="1040,109,1203,165"/>
+<area shape="rect" id="node10" href="$melissa__options_8c.html" title="Parse commande line to get stats options. " alt="" coords="1227,109,1397,165"/>
+</map>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['increment',['increment',['../structcovariance__s.html#a371f79980673fa7182e6e7b37a37d8ec',1,'covariance_s::increment()'],['../structmean__s.html#a6c280ec00f41f7b0a152f0ed01cfaddc',1,'mean_s::increment()'],['../structquantile__s.html#a7ecd4dd0dc072b2aff6ccd70b5b2405c',1,'quantile_s::increment()']]],
+  ['increment',['increment',['../structcovariance__s.html#a371f79980673fa7182e6e7b37a37d8ec',1,'covariance_s::increment()'],['../structmean__s.html#a6c280ec00f41f7b0a152f0ed01cfaddc',1,'mean_s::increment()'],['../structmoments__s.html#aee8f9db05fcb7b7bbe3c73bc5da62511',1,'moments_s::increment()'],['../structquantile__s.html#a7ecd4dd0dc072b2aff6ccd70b5b2405c',1,'quantile_s::increment()']]],
   ['increment_5fsobol',['increment_sobol',['../structmelissa__data__s.html#ab0f7a2423267e43bd5b53b2e99409596',1,'melissa_data_s']]],
   ['init_5frequester',['init_requester',['../structzmq__data__s.html#adf331561c5a087134025e18871168b73',1,'zmq_data_s']]],
   ['init_5fsobol',['init_sobol',['../structmelissa__data__s.html#a9aa19307c2d51d8e32c86fa58b172166',1,'melissa_data_s']]],

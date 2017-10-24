@@ -2,6 +2,7 @@ var searchData=
 [
   ['max',['max',['../structmin__max__s.html#a4bf8f50e01cbdc1b73e8ea4cb35f4bb0',1,'min_max_s']]],
   ['max_5ffield_5fname',['MAX_FIELD_NAME',['../melissa__utils_8h.html#af770d3a4e79aa91d3072310c5bc74c75',1,'MAX_FIELD_NAME():&#160;melissa_utils.h'],['../melissa__api_8c.html#af770d3a4e79aa91d3072310c5bc74c75',1,'MAX_FIELD_NAME():&#160;melissa_api.c']]],
+  ['max_5forder',['max_order',['../structmoments__s.html#a4659bee7619737ed9719c7adf56e373d',1,'moments_s']]],
   ['mean',['mean',['../structmean__s.html#a3f4c8f66db824b9046695db0b70f71a0',1,'mean_s']]],
   ['mean_2ec',['mean.c',['../mean_8c.html',1,'']]],
   ['mean_2eh',['mean.h',['../mean_8h.html',1,'']]],
@@ -33,6 +34,7 @@ var searchData=
   ['melissa_5ffinalize',['melissa_finalize',['../group__melissa__api.html#ga86f4eb40ff2830e2354b2b2846bc526b',1,'melissa_finalize():&#160;melissa_api.c'],['../group__melissa__api.html#ga86f4eb40ff2830e2354b2b2846bc526b',1,'melissa_finalize():&#160;melissa_api.c']]],
   ['melissa_5ffree',['melissa_free',['../group__melissa__utils.html#ga0028e678d2fb0a49611d7957ce166565',1,'melissa_free(void *ptr):&#160;melissa_utils.c'],['../group__melissa__utils.html#ga0028e678d2fb0a49611d7957ce166565',1,'melissa_free(void *ptr):&#160;melissa_utils.c']]],
   ['melissa_5ffree_5fdata',['melissa_free_data',['../group__melissa__data.html#ga2fae63b72ce9695061a9e7f8bfe88dad',1,'melissa_free_data(melissa_data_t *data):&#160;melissa_data.c'],['../group__melissa__data.html#ga2fae63b72ce9695061a9e7f8bfe88dad',1,'melissa_free_data(melissa_data_t *data):&#160;melissa_data.c']]],
+  ['melissa_5fget_5ffields',['melissa_get_fields',['../group__melissa__fields.html#ga05e7c01391cb9c91ff1e95bdb2ff426f',1,'melissa_get_fields(int argc, char **argv, melissa_field_t *fields, int nb_fields):&#160;melissa_fields.c'],['../group__melissa__fields.html#ga05e7c01391cb9c91ff1e95bdb2ff426f',1,'melissa_get_fields(int argc, char **argv, melissa_field_t *fields, int nb_fields):&#160;melissa_fields.c']]],
   ['melissa_5fget_5fnode_5fname',['melissa_get_node_name',['../group__melissa__utils.html#ga84a7e50cfdcb24ef4982c3307dce990c',1,'melissa_get_node_name(char *node_name):&#160;melissa_utils.c'],['../group__melissa__utils.html#ga84a7e50cfdcb24ef4982c3307dce990c',1,'melissa_get_node_name(char *node_name):&#160;melissa_utils.c']]],
   ['melissa_5fget_5foptions',['melissa_get_options',['../group__melissa__options.html#ga93a1b2eb90070d0f567ec0e4d182fa86',1,'melissa_get_options(int argc, char **argv, melissa_options_t *options):&#160;melissa_options.c'],['../group__melissa__options.html#ga93a1b2eb90070d0f567ec0e4d182fa86',1,'melissa_get_options(int argc, char **argv, melissa_options_t *options):&#160;melissa_options.c']]],
   ['melissa_5fget_5ftime',['melissa_get_time',['../group__melissa__utils.html#ga2b5ee6072dc9752f9410f8129cdba345',1,'melissa_get_time():&#160;melissa_utils.c'],['../group__melissa__utils.html#ga2b5ee6072dc9752f9410f8129cdba345',1,'melissa_get_time():&#160;melissa_utils.c']]],
@@ -66,6 +68,9 @@ var searchData=
   ['min_5fmax_2eh',['min_max.h',['../min__max_8h.html',1,'']]],
   ['min_5fmax_5fs',['min_max_s',['../structmin__max__s.html',1,'']]],
   ['min_5fmax_5ft',['min_max_t',['../min__max_8h.html#a43dd29c44ea2f6a0e2d7d7fb72306705',1,'min_max.h']]],
+  ['moments',['moments',['../structmelissa__data__s.html#ab931f6c7f7baab6492945d616ab7e19a',1,'melissa_data_s']]],
+  ['moments_5fs',['moments_s',['../structmoments__s.html',1,'']]],
+  ['moments_5ft',['moments_t',['../general__moments_8h.html#ad0da3ff98ac9bca733aa08d06b460cc6',1,'general_moments.h']]],
   ['mpi_5fcomm',['MPI_Comm',['../melissa__api_8c.html#a68c509d4adb3f4a1d6fe3a9b0b87c7b9',1,'melissa_api.c']]],
   ['mpi_5fmax_5fprocessor_5fname',['MPI_MAX_PROCESSOR_NAME',['../melissa__utils_8h.html#a32c2e019a42e9bfc9db6f8d9cf6adb4e',1,'MPI_MAX_PROCESSOR_NAME():&#160;melissa_utils.h'],['../melissa__api_8c.html#a32c2e019a42e9bfc9db6f8d9cf6adb4e',1,'MPI_MAX_PROCESSOR_NAME():&#160;melissa_api.c']]]
 ];

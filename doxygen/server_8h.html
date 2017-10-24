@@ -63,7 +63,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -77,13 +77,26 @@ $(function() {
 Include dependency graph for server.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="server_8h__incl.png" border="0" usemap="#_2home_2tterraz_2avido_2melissa_2Melissa_2source_2server_2server_8h" alt=""/></div>
-<!-- MAP 0 -->
+<map name="_2home_2tterraz_2avido_2melissa_2Melissa_2source_2server_2server_8h" id="_2home_2tterraz_2avido_2melissa_2Melissa_2source_2server_2server_8h">
+<area shape="rect" id="node2" href="melissa__fields_8h.html" title="melissa_fields.h" alt="" coords="451,109,567,136"/>
+<area shape="rect" id="node3" href="melissa__data_8h.html" title="melissa_data.h" alt="" coords="550,184,661,211"/>
+<area shape="rect" id="node5" href="melissa__utils_8h.html" title="melissa_utils.h" alt="" coords="5,259,115,285"/>
+<area shape="rect" id="node7" href="melissa__options_8h.html" title="melissa_options.h" alt="" coords="229,259,355,285"/>
+<area shape="rect" id="node8" href="mean_8h.html" title="mean.h" alt="" coords="502,333,567,360"/>
+<area shape="rect" id="node9" href="variance_8h.html" title="variance.h" alt="" coords="431,259,513,285"/>
+<area shape="rect" id="node10" href="general__moments_8h.html" title="general_moments.h" alt="" coords="537,259,673,285"/>
+<area shape="rect" id="node11" href="min__max_8h.html" title="min_max.h" alt="" coords="698,259,785,285"/>
+<area shape="rect" id="node12" href="threshold_8h.html" title="threshold.h" alt="" coords="809,259,895,285"/>
+<area shape="rect" id="node13" href="quantile_8h.html" title="quantile.h" alt="" coords="873,333,951,360"/>
+<area shape="rect" id="node14" href="covariance_8h.html" title="covariance.h" alt="" coords="920,259,1016,285"/>
+<area shape="rect" id="node15" href="sobol_8h.html" title="sobol.h" alt="" coords="1091,259,1155,285"/>
+</map>
 </div>
 </div>
 <p><a href="server_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
+Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpull__data__s.html">pull_data_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -94,21 +107,14 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a732dd32815433f2559f244bbc873a5a8"><td class="memItemLeft" align="right" valign="top"><a id="a732dd32815433f2559f244bbc873a5a8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>comm_n_to_m_init</b> (int *rcounts, int *rdispls, const int global_vect_size, const int *server_vect_size, int *client_vect_size, const int nb_proc_client, const int rank, <a class="el" href="server_8h.html#ade024e3c1f321b1b4a5d492a36507c7c">pull_data_t</a> *pull_data)</td></tr>
-<tr class="separator:a732dd32815433f2559f244bbc873a5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa32af470e01ff85a7fda55b03ca85c75"><td class="memItemLeft" align="right" valign="top"><a id="aa32af470e01ff85a7fda55b03ca85c75"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>increment_step_simu</b> (<a class="el" href="melissa__fields_8h.html#a0db14f3058196b41211fa5cf9d1b7cdb">melissa_field_t</a> *field, char *field_name, int group_id)</td></tr>
-<tr class="separator:aa32af470e01ff85a7fda55b03ca85c75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a743052d1bc09c582fff9517b47853211"><td class="memItemLeft" align="right" valign="top"><a id="a743052d1bc09c582fff9517b47853211"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>check_simu_state</b> (<a class="el" href="melissa__fields_8h.html#a0db14f3058196b41211fa5cf9d1b7cdb">melissa_field_t</a> *field, int nb_fields, int group_id, int nb_time_steps, <a class="el" href="melissa__data_8h.html#a23ce9ab16c4b52aa4ae79434808e6dd0">comm_data_t</a> *comm_data)</td></tr>
-<tr class="separator:a743052d1bc09c582fff9517b47853211"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34d55ec68237fa7321c928ec6e584514"><td class="memItemLeft" align="right" valign="top"><a id="a34d55ec68237fa7321c928ec6e584514"></a>
-long int&#160;</td><td class="memItemRight" valign="bottom"><b>count_mbytes_written</b> (<a class="el" href="melissa__options_8h.html#a9c283254ed92b8160b76abf53a37e09b">melissa_options_t</a> *options)</td></tr>
-<tr class="separator:a34d55ec68237fa7321c928ec6e584514"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef026861732c4e3649a5a4e7fed7aeec"><td class="memItemLeft" align="right" valign="top"><a id="aef026861732c4e3649a5a4e7fed7aeec"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>string_recv</b> (void *socket, char *recv_buff)</td></tr>
-<tr class="separator:aef026861732c4e3649a5a4e7fed7aeec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga732dd32815433f2559f244bbc873a5a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__melissa__utils.html#ga732dd32815433f2559f244bbc873a5a8">comm_n_to_m_init</a> (int *rcounts, int *rdispls, const int global_vect_size, const int *server_vect_size, int *client_vect_size, const int nb_proc_client, const int rank, <a class="el" href="server_8h.html#ade024e3c1f321b1b4a5d492a36507c7c">pull_data_t</a> *pull_data)</td></tr>
+<tr class="separator:ga732dd32815433f2559f244bbc873a5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga37e8e34f460eeed9e1053589b06f98db"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__melissa__utils.html#ga37e8e34f460eeed9e1053589b06f98db">check_simu_state</a> (<a class="el" href="melissa__fields_8h.html#a0db14f3058196b41211fa5cf9d1b7cdb">melissa_field_t</a> *field, int nb_fields, int group_id, int nb_time_steps, <a class="el" href="melissa__data_8h.html#a23ce9ab16c4b52aa4ae79434808e6dd0">comm_data_t</a> *comm_data)</td></tr>
+<tr class="separator:ga37e8e34f460eeed9e1053589b06f98db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga34d55ec68237fa7321c928ec6e584514"><td class="memItemLeft" align="right" valign="top">long int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__melissa__utils.html#ga34d55ec68237fa7321c928ec6e584514">count_mbytes_written</a> (<a class="el" href="melissa__options_8h.html#a9c283254ed92b8160b76abf53a37e09b">melissa_options_t</a> *options)</td></tr>
+<tr class="separator:ga34d55ec68237fa7321c928ec6e584514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef026861732c4e3649a5a4e7fed7aeec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__melissa__utils.html#gaef026861732c4e3649a5a4e7fed7aeec">string_recv</a> (void *socket, char *recv_buff)</td></tr>
+<tr class="separator:gaef026861732c4e3649a5a4e7fed7aeec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21c358441bc0fc082d5e032c87afecd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="server_8h.html#a21c358441bc0fc082d5e032c87afecd1">global_confidence_sobol_martinez</a> (<a class="el" href="melissa__fields_8h.html#a0db14f3058196b41211fa5cf9d1b7cdb">melissa_field_t</a> *field, int nb_fields, <a class="el" href="melissa__data_8h.html#a23ce9ab16c4b52aa4ae79434808e6dd0">comm_data_t</a> *comm_data, double *interval1, double *interval_tot)</td></tr>
 <tr class="separator:a21c358441bc0fc082d5e032c87afecd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -192,7 +198,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>string_recv</b> (void 
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 2 2017 16:51:53 for Melissa by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Oct 24 2017 10:54:02 for Melissa by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
