@@ -7,6 +7,21 @@
     </head>
     
     <body>
+        <nav id="navrow1" class="topmenu">
+          <a href="index.html"><div id="melissa">Melissa</div></a>
+            <ul class="tablist">
+            <li class="current"><a href="index.html"><span>Melissa</span></a></li>
+            <ul class="tablist2">
+            <li><a class="active" href="#overview"><span>Overview</span></a></li>
+            <li><a class="" href="#news"><span>News</span></a></li>
+            <li><a class="" href="#papers"><span>Publications</span></a></li>
+            </li>
+            </ul>
+            <li><a href="documentation.html"><span>Documentation</span></a></li>
+            <li><a href="contacts.html"><span>Contacts</span></a></li>
+            <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
+            </ul>
+        </nav>
         <div id="titlearea">
             <table cellspacing="0" cellpadding="0">
             <tbody>
@@ -19,17 +34,7 @@
             </tbody>
             </table>
         </div>
-        <nav id="navrow1" class="tabs">
-          <a href="index.html"><div id="melissa">Melissa</div></a>
-            <ul class="tablist">
-            <li><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
-            <li><a href="tutorial.html"><span>Tutorial</span></a></li>
-            <li><a href="refcard.html"><span>Refcard</span></a></li>
-            <li><a href="doxygen.html"><span>Documentation</span></a></li>
-            <li><a href="contacts.html"><span>Contacts</span></a></li>
-            <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
-            </li>
-            </ul>
+        <nav id="navrow2" class="tabs">
         </nav>
         <div id="contener1">
           <section id="index_text" class="text">
@@ -38,7 +43,7 @@
             <p>
               Melissa code will be available on <a href="https://github.com/melissa-sa/melissa" title="Melissa repository">this github repo</a> before Supercomputing 2017
             </p>
-            <h2>Overview</h2>
+            <h2 id="overview">Overview</h2>
             <p>
               Melissa is an in situ solution for sensitivity analysis.<br />
               It implements iterative algorithms to compute spatio-temporal statistic fields over results of large scale sensitivity studies.
@@ -46,22 +51,83 @@
               Simulation outputs are never stored on disc. They are sent by the simulations to a parallel server, which agregate them to the statistic fields in an iterative fashion, and then trow them away.
               This allows to compute statistics maps on every mesh element for every timestep on a full scale study.
             </p>
-            <h2>Melissa Workflow</h2>
+            <h3>Melissa Workflow</h2>
             <p>
               
               Melissa rely on a client/server architecture, composed of three main modules:
               <ul>
                 <li> <code class="code">Melissa Server</code>: an independent parallel executable. It receives data from the simulations, updates iterative statistics as soon as possible, then trow data away.</li>
-                <li> <code class="code">Melissa API</code>: a shared library to be linked within the simulation code. It forwards simulation data to Melissa Server. The simulations of the sensitivity analysis become the clientsof Melissa Server.</li>
+                <li> <code class="code">Melissa API</code>: a shared library to be linked within the simulation code. It forwards simulation data to Melissa Server. The simulations of the sensitivity analysis become the clients of Melissa Server.</li>
                 <li> <code class="code">Melissa Master</code>: A Python script in charge of generating and managing the whole global sensitivity analysis.</li>
               </ul>
               <figure>
                 <img src="src/workflow.png" alt="Melissa workflow" title="Melissa workflow" width="80%"/>
                 <figcaption>Melissa Workflow on a Cluster</figcaption>
               </figure>
+            </p><hr/>
+            <h2 id="news">News</h2>
+            <p>
+                Melissa release 0.1 comming soon !
+            </p><hr/>
+            <h2 id="papers">Publications</h2>
+            <p>
+                                  <UL>
+                                    <LI><FONT size ="+0"><B>
+                                    <A href="https://hal.archives-ouvertes.fr/hal-01607479">Melissa: Large Scale In Transit Sensitivity Analysis Avoiding Intermediate Files</A></B>
+                                    </LI></FONT>
+                                    <ul>
+                                      <LI>
+                                       Théophile Terraz, Alejandro Ribes, Yvan Fournier, Bertrand Iooss and Bruno Raffin
+                                      </LI>
+                                      <LI>
+                                      <I>
+                                      The International Conference for High Performance Computing, Networking, Storage and Analysis (Supercomputing), Nov 2017, Denver, United States.
+                                      </I></LI>
+                                    </UL>
+                                  </UL>
             </p>
           </section>
         </div>
+        
+    <script>
+        <!--
+        
+        function rendre_actif(element)
+        {
+            document.querySelector(".active").className = "";
+            document.querySelector('a[href="#' + element + '"]').className = "active";
+        }
+        
+        window.onscroll = function(){
+            var scroll = window.scrollY;
+            if(scroll >= document.getElementById("papers").offsetTop - 10)
+            {
+                rendre_actif("papers");
+            }
+            else if(scroll >= document.getElementById("news").offsetTop - 10)
+            {
+                rendre_actif("news");
+            }
+            else if(scroll >= document.getElementById("overview").offsetTop - 10)
+            {
+                rendre_actif("overview");
+            }
+        }
+        
+        document.querySelector('a[href="papers"]').onclick = function(){
+            rendre_actif("papers");
+        }
+        
+        document.querySelector('a[href="news"]').onclick = function(){
+            rendre_actif("news");
+        }
+        
+        document.querySelector('a[href="overview"]').onclick = function(){
+            rendre_actif("overview");
+        }
+        //-->
+    </script>
+        
     </body>
 </html>
 

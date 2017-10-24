@@ -34,7 +34,6 @@
             <li><a href="#api"><span>Instrumentation</span></a></li>
             <li><a href="#launcher"><span>Melissa&#160;Launcher</span></a></li>
         </ul>
-      <li><a href="refcard.html"><span>Refcard</span></a></li>
       <li><a href="doxygen.html""><span>Documentation</span></a></li>
       <li><a href="contacts.html"><span>Contacts</span></a></li>
       <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
@@ -49,9 +48,9 @@
       <h2 id="sbs">Step-by-step tutorial with the heat equation solver</h2>
       <p>
         In this section, we will use Melissa to perform a global sensitivity analysis on a very simple case: a heat equation solver.<br />
-        This example is available on the folder <code class="code">source/examples/heat_example</code>.
+        This example is available on the folder <code class="code">examples/heat_example</code>.
         It solves the heat equation on a regular 2D grid, with backward Euler method.<br />
-        The original source codes are <code class="code">heat_base.c</code> in C and <code class="code">heat_base.f90</code> in Fortran.<br />
+        The original source codes are <code class="code">heat_base.c</code> in C and <code class="code">heat_base.f90</code> in Fortran, available in <code class="code">examples/heat_example_base</code>.<br />
         We will go through Melissa integration step by step in these examples.
         The final results are available in <code class="code">heat.c</code>, <code class="code">heat.f90</code> and <code class="code">options.py</code>. They are compiled with Melissa if the option <code class="code">-DBUILD_EXAMPLES=ON</code> is given to CMake.<br />
         Select your simulation type and language:
@@ -250,22 +249,25 @@
         <ul>
           <li><code class="code">GLOBAL_OPTIONS</code>: contains informations about your environement.<br />
           <li><code class="code">STUDY_OPTIONS</code>: sets the parameters of your sensitivity study. They will be used by the launcher to generate its internal structures for the study management.</li>
-          <li><code class="code">SERVER_OPTIONS</code> and <code class="code">SIMULATIONS_OPTIONS</code>: sets some parameters to launch the server and simulations jobs.</li>
           <li><code class="code">MELISSA_STATS</code>: are used to activate (or not) the computations of the iterative statistics.</li>
           <li><code class="code">USER_FUNCTIONS</code>: are pointers to user defined functions, used by the launcher. Some of them are optional, others are mandatory. We will describe these functions in this section.</li>
         </ul>
         Note that you can add fields to the option dictionaries, and they can be used in the user defined functions.
+        see the <a href="getting_started.html#launcher">getting started</a> section for more details.
       </p>
       An example <code class="code">options.py</code> file is available in <code class="code">examples/heat_example</code>. Use it as a base to define your own <code class="code">options.py</code> file.
      
       <h3 id="run">Launch the study</h3>
       
-      To launch a study with the heat equation solver, call the launcher with the path to your <code class="code">option.py</code> file:
+      <p>
+        To launch a study with the heat equation solver, call the launcher with the path to your <code class="code">option.py</code> file:
         <pre class="prettyprint"><code class="lang-bash">
   cd examples/heat_example
   python ../../launcher/melissa_launcher ./
         </code></pre>
-        
+        The results will be on the simulation directorie, in files of the form: <code class="code">&#60field_name&#62_&#60stat&#62.&#60time_stamp&#62</code><br />
+        For example, the variance of the field "heat" at the first timestep whould be: <code class="code">heat_variance.001</code>
+      </p>
      
     </section>
     </div>

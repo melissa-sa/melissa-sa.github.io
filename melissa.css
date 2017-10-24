@@ -8,7 +8,8 @@ html
 
 body
 {
-    width: 50%;
+    width: 1000px;
+/*     width: 60%; */
 /*     height: 100%; */
     min-width: 800px;
 /*     background-color: rgba(10, 250, 100, 0.05); */
@@ -28,6 +29,11 @@ em
 }
 
 h1
+{
+    font-size: 200%;
+}
+
+h1 .a
 {
     font-size: 200%;
 }
@@ -140,12 +146,32 @@ span.legend
     font-size: 13px;
     font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
     position: fixed;
-    margin-top: 50px;
+    margin-top: 300px;
     margin-left: 20px;
     box-shadow: 0px 0px 6px grey;
+    border-radius: 5px;
+}
+
+.topmenu
+{
+    background-color: white;
+    width: 180px;
+    z-index: 101;
+    font-size: 13px;
+    font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+    position: fixed;
+    margin-top: 40px;
+    margin-left: 20px;
+    box-shadow: 0px 0px 6px grey;
+    border-radius: 5px;
 }
 
 .tabs a:hover
+{
+    text-decoration: none;
+}
+
+.topmenu a:hover
 {
     text-decoration: none;
 }
@@ -158,6 +184,7 @@ span.legend
     text-align: center;
     background-image:url('src/nav_h.png');
     background-repeat:repeat-x;
+    border-radius: 5px;
 }
 
 a #melissa
@@ -166,22 +193,103 @@ a #melissa
     text-decoration: none;
 }
 
+.menu
+{
+/*    margin: 0;
+    padding: 0;
+    background-color: rgba(0, 100, 10, 0.2);*/
+    background-color: white;
+    width: 180px;
+    z-index: 101;
+    font-size: 13px;
+    font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+    position: fixed;
+    margin-top: 40px;
+    margin-left: 20px;
+    box-shadow: 0px 0px 6px grey;
+    border-radius: 5px;
+}
+
+.menu li
+{
+    float: left;
+    display: table-cell;
+    background-image: url('src/tab_b.png');
+    line-height: 36px;
+    list-style: none;
+/*     background-color: white; */
+}
+
+.menu a
+{
+    display: block;
+    padding: 0 20px;
+    font-weight: bold;
+/*     background-image:url('src/tab_s.png'); */
+    background-repeat:no-repeat;
+    background-position:right;
+    color: #283A5D;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    outline: none;
+/*     border-top: 1px solid rgba(0, 100, 10, 0.2); */
+}
+
+.menu a:hover
+{
+    background-image: url('src/tab_h.png');
+    background-repeat:repeat-x;
+    color: #fff;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+    text-decoration: none;
+}
+
+.menu li.current a
+{
+    background-image: url('src/tab_a.png');
+    background-repeat:repeat-x;
+    color: #fff;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+    border-top: 1px solid black;
+}
+
 .tablist
 {
     margin: 0;
     padding: 0;
 /*     display: table; */
-    background-color: rgba(0, 100, 10, 0.2);
+/*     background-color: rgba(0, 100, 10, 0.2); */
+    border-radius: 5px;
+}
+
+.tablist2
+{
+    margin-left: 10px;
+    padding: 0;
+/*     display: table; */
+/*     background-color: rgba(0, 100, 10, 0.2); */
+    border-left: 1px solid rgba(0, 100, 10, 0.2);
+    box-shadow: -3px 0px 5px rgba(0, 100, 10, 0.2);
+}
+
+.tablist3
+{
+    margin-left: 10px;
+    padding: 0;
+/*     display: table; */
+/*     background-color: rgba(0, 100, 10, 0.2); */
+    border-left: 1px solid rgba(0, 100, 10, 0.2);
+/*     box-shadow: -3px 0px 5px rgba(0, 100, 10, 0.5); */
 }
 
 .tablist li
 {
 /*     float: left; */
-/*     display: table-cell; */
-/*     background-image: url('src/tab_b.png'); */
+/* /*     display: table-cell; */ */
+    background-image: url('src/tab_b.png');
     line-height: 36px;
     list-style: none;
-    background-color: white;
+/*     background-color: white; */
 }
 
 .tablist a
@@ -296,13 +404,14 @@ fieldset.lang
 /*     display: flex; */
 /*     flex-direction: column; */
     background-color: white;
-    margin-top: 50px;
+    margin-top: 40px;
     margin-bottom: 50px;
     margin-right: 20px;
     margin-left: 220px;
     box-shadow: 0px 0px 6px grey;
     background-image:url('src/nav_h.png');
     background-repeat:repeat-x;
+    border-radius: 5px;
 }
 
 #dox_text
@@ -336,4 +445,10 @@ figure figcaption
 figure img
 {
     padding: 10px;
+}
+
+a.active
+{
+    background-image: url('src/bc_s.png');
+    background-position: right 5px center;
 }
