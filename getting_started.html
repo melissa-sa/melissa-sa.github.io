@@ -347,6 +347,13 @@
         <pre class="prettyprint f"><code class="lang-fortran">
   integer :: coupling = 1
         </code></pre>
+        Then split MPI_COMM_WORLD by simulation rank in the simulation group:
+        <pre class="prettyprint c"><code class="lang-c">
+  MPI_Comm_split(MPI_COMM_WORLD, sobol_rank, me, &comm);
+        </code></pre>
+        <pre class="prettyprint f"><code class="lang-fortran">
+  call MPI_Comm_split(MPI_COMM_WORLD, sobol_rank, me, comm, statinfo);
+        </code></pre>
         </span>
         To use the Melissa functions, we have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
         <pre class="prettyprint c mpi"><code class="lang-c">
