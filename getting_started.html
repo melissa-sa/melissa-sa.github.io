@@ -14,9 +14,8 @@
           <a href="index.html"><div id="melissa">Melissa</div></a>
             <ul class="tablist">
             <li><a href="index.html"><span>Melissa</span></a></li>
-            <li class="current"><a href="documentation.html"><span>Documentation</span></a></li>
-            <ul class="tablist3">
-              <li class="current"><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
+            <li><a href="doxygen.html"><span>Documentation</span></a></li>
+            <li class="current"><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
               <ul class="tablist2">
                   <li><a class="active" href="#intro"><span>Introduction</span></a></li>
                   <li><a class="" href="#install"><span>Installation</span></a></li>
@@ -24,8 +23,6 @@
                   <li><a class="" href="#simu"><span>Simulation</span></a></li>
                   <li><a class="" href="#launcher"><span>Melissa&#160;Launcher</span></a></li>
               </ul>
-              <li><a href="doxygen.html"><span>Doxygen</span></a></li>
-            </ul>
             <li><a href="contacts.html"><span>Contacts</span></a></li>
             <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
             </li>
@@ -454,12 +451,12 @@
         Note that you can add fields to the option dictionaries, and they can be used in the user defined functions.
       </p>
       <h3>Functions</h3>
-      Melissa Launcher needs the mandatory functions to be defined. Otherwhise, it will return without launching the study.
+      Melissa Launcher needs the mandatory functions to be defined. Otherwise, it will return without runing the study.
       The optional functions are ignored if they are not defined by the user.<br />
       Note that the launcher sees simulations as "groups". In the case of classical statistics (i.e. not Sobol' indices), one group corresponds to one simulation. When Sobol' indices are required, simulations have to be launched by group, in the same job allocation.
       <ul>
         <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code> (optional):</pre></li>
-        This function is called only once, before starting the study. It is called from the dirrectory set in <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
+        This function is called only once, before starting the study. It is called from the directory set in <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
         
         <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter_set']</code> (mandatory):</pre></li>
         This function is used by Melissa launcher to draw simulations parameter sets. it must return a Numpy array of floats of the size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>
@@ -547,15 +544,15 @@
         The same as <code  class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code>.
       </ul>
      
-      <h3 id="run">Launch the study</h3>
+      <h3 id="run">Run the study</h3>
       
       <p>
-        To launch a study with the heat equation solver, call the launcher with the path to your <code class="code">option.py</code> file:
+        To run a study with the heat equation solver, call the launcher with the path to your <code class="code">option.py</code> file:
         <pre class="prettyprint"><code class="lang-bash">
   cd examples/heat_example
   python ../../launcher/melissa_launcher ./
         </code></pre>
-        The results will be on the simulation directorie, in files of the form: <code class="code">&#60field_name&#62_&#60stat&#62.&#60time_stamp&#62</code><br />
+        The results will be in the directory <code class="code">STATS</code>, in files of the form: <code class="code">&#60field_name&#62_&#60stat&#62.&#60time_stamp&#62</code><br />
         For example, the variance of the field "heat" at the first timestep whould be: <code class="code">heat_variance.001</code>
       </p>
     </section>
