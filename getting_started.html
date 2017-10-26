@@ -54,8 +54,8 @@
               Melissa has a three tier architecture, and is based on a client/server model:
               <ul>
                 <li> <code class="code">Melissa Server</code>: an independent parallel executable. It receives data from the simulations, updates iterative statistics as soon as possible, then discard the processed data.</li>
-                <li> <code class="code">Melissa API</code>: a shared library to be linked within the numerical simulation solver. It forwards simulation data to Melissa Server. The simulations of the sensitivity analysis become the clients of Melissa Server.</li>
-                <li> <code class="code">Melissa Master</code>: A Python script in charge of generating and managing the whole global sensitivity analysis.</li>
+                <li> <code class="code">Melissa API</code>: a shared library to be linked within the numerical simulation solver. It forwards simulation data to Melissa Server.</li>
+                <li> <code class="code">Melissa Master</code>: A Python script in charge of generating and managing the whole global sensitivity study.</li>
               </ul>
               <figure>
                 <img src="src/workflow.png" alt="Melissa workflow" title="Melissa workflow" width="80%"/>
@@ -81,13 +81,13 @@
         </fieldset>
       </div>
           <p>
-              We will see below how to install Melissa, how to link it with the numerical simulation solver, and how to manage a sensitivity analysis through a verry simple example.
+              We will see below how to install Melissa, how to link it with the numerical simulation solver, and how to manage a sensitivity analysis through a very simple example.
           </p>
       <h2 id="install">Installation</h2>
       <p>
         First, download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>.<br />
         Melissa is a CMake project.
-        To install Melissa from the sources, you will need CMake and PkgConfig.
+        In order to install Melissa from the sources, you will need CMake and PkgConfig.
         If you don't have ZeroMQ installed, CMake will download and install it for you.<br />
         From the <code class="code">Melissa</code> root directory:
         <pre class="prettyprint"><code class="lang-bash">
@@ -126,7 +126,14 @@
         </ul>
       </p>
       <h2 id="api">Melissa API</h2>
-      Melissa API is a library composed of tree functions, to be integrated in the solver. To use the Melissa functions, you have to link <code class="code"><span class="nompi">melissa_api_no_mpi</span><span class="mpi">melissa_api</span></code> and include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> to your solver.
+      Melissa API is a library composed of tree functions, to be integrated in the solver:
+        <ul>
+          <li><code class="code">melissa_init</code></li>
+          <li><code class="code">melissa_send</code></li>
+          <li><code class="code">melissa_finalize</code></li>
+        </ul>
+      
+      In order to use the Melissa functions, you have to link <code class="code"><span class="nompi">melissa_api_no_mpi</span><span class="mpi">melissa_api</span></code> and include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> to your solver.
         <pre class="prettyprint c mpi"><code class="lang-c">
   #include &#60melissa_api.h&#62
         </code></pre>
