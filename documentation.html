@@ -1,48 +1,97 @@
- 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="melissa.css" />
-        <title>Melissa</title>
-    </head>
-    
-    <body>
+  <head>
+    <meta charset="utf-8" />
+    <link href="prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="prettify.js"></script>
+    <link rel="stylesheet" href="melissa.css" />
+
+    <title>Melissa</title>
+  </head>
+
+  <body onload="prettyPrint()">
         <nav id="navrow1" class="topmenu">
-          <a href="index.html"><div id="melissa">Melissa</div></a>
+          <a href="index.html"><div id="melissa">About</div></a>
             <ul class="tablist">
-            <li><a href="index.html"><span>Melissa</span></a></li>
-            <li class="current"><a href="documentation.html"><span>Documentation</span></a></li>
-            <ul class="tablist2">
+            <li><a href="index.html"><span>About</span></a></li>
+            <li class="current"><a href="documentation.html"><span>What is Melissa</span></a></li>
+            <li><a href="doxygen.html"><span>Documentation</span></a></li>
             <li><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
-            <li><a href="doxygen.html"><span>Doxygen</span></a></li>
-            </li>
-            </ul>
             <li><a href="gallery.html"><span>Gallery</span></a></li>
             <li><a href="contacts.html"><span>Contacts</span></a></li>
             <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
             </li>
             </ul>
         </nav>
-        <div id="titlearea">
-            <table cellspacing="0" cellpadding="0">
-            <tbody>
-            <tr style="height: 56px;">
+    <div id="titlearea">
+      <table cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr style="height: 56px;">
             <td style="padding-left: 0.5em;">
-            <div id="melissa">Melissa
-            </div>
+              <div id="melissa">
+                Melissa
+              </div>
             </td>
-            </tr>
-            </tbody>
-            </table>
-        </div>
-        <nav id="navrow2" class="tabs">
-        </nav>
-        <div id="contener1">
-          <section id="index_text" class="text">
-            <a href="getting_started.html"><h1><span>Getting&#160;Started</span></h1></a><hr/>
-            <a href="doxygen.html"><h1><span>Doxygen</span></h1></a><hr/>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="contener1">
+    <section id="what" class="text">
+    
+    
+      <h1>What is Melissa</h1><hr/>
+      <h2>Large sensitivity studies</h2>
+      <p>
+    Computer simulation is undoubtedly a fundamental question in
+modern engineering. Whatever the purpose of a study, computer
+models help the analysts to forecast the behavior of the system
+under investigation in conditions that cannot be reproduced in
+physical experiments (e.g. accidental scenarios), or when physical
+experiments are theoretically possible but at a very high cost. To
+improve and have a better hold on these tools, it is crucial to be able
+to analyze them under the scopes of sensitivity and uncertainty
+analysis. In particular, global sensitivity analysis aims at identifying
+the most influential parameters for a given output of the computer
+model and at evaluating the effect of uncertainty in each uncertain
+input variable on model output. Based on a probabilistic
+framework, it consists in evaluating the computer model on a large
+size statistical sample of model inputs, then analyzing all the results
+(the model outputs) with specific statistical tools.
+      </p>
+      <p>
+Sensitivity analysis for large scale numerical systems that simulate complex spatial and temporal evolutions remains
+very challenging. Such studies can be rather complicated with
+numerical models computing the evolution in time with tens of
+variables on thousands or millions of grid points, systems coupling several models, prediction systems using not only one model
+but also observations through, for instance, data assimilation tech-
+niques.</p>
+      <p>
+Multiple simulation runs (sometimes several thousand) are required to compute sound statistics for global sensitivity analysis.
+Current practice consists in running all the necessary instances
+with different set of input parameters, store the results to disk, often
+called ensemble data, to later read them back from disk to compute
+the required statistics. The amount of storage needed may quickly
+become overwhelming, with the associated long read time that
+makes statistic computing time consuming. To avoid this pitfall,
+scientists reduce their study size by running low resolution simulations or down-sampling output data in space and time. Today
+terascale and tomorrow exascale machines offer compute capabilities that would enable large scale sensitivity studies. But they are
+unfortunately not feasible due to this storage issue.
+      </p>
+      <h2>Melissa</h2>
+      <p>
+Novel approaches are required. In situ and in transit processing
+emerged as a solution to perform data analysis starting as soon as
+the results are available in the memory of the simulation. The goal
+is to reduce the data to store to disk and to avoid the time penalty
+to write and then read back the raw data set as required by the
+classical postmortem analysis approach. But to our knowledge no
+solution has been developed to drastically reduce the storage needs
+for sensitivity analysis.</p>
+    
+    
           </section>
         </div>
+        
     </body>
 </html>
