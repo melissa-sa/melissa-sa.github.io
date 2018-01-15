@@ -118,10 +118,10 @@
           Adds some debug outputs to Melissa server.
           <li><code class="code">-DCMAKE_INSTALL_PREFIX</code> (default: <code class="prettyprint lang-bash">'../install'</code>)</li>
           Defines melissa install directory.
-          <li><code class="code">-DINSTALL_ZMQ</code> (default: ON)</li>
-          Enable CMake to install ZeroMQ. If you already have ZeroMQ manualy installed, put it to OFF and use the option described after:
+          <li><code class="code">-DINSTALL_ZMQ</code> (default: OFF)</li>
+          Enable CMake to install ZeroMQ.
           <li><code class="code">-DZMQ_DIR</code></li>
-          Sets the path to your ZeroMQ install directory. If the directory is not found, the previous option will be turned to ON and ZeroMQ will be downloaded and installed.
+          Sets the path to your ZeroMQ install directory.
         </ul>
       </p>
       <h2 id="api">Melissa API</h2>
@@ -153,42 +153,42 @@
        </h3>
        <p>Prototype:</p>
         <pre class="prettyprint c mpi"><code class="lang-c">
-  void melissa_init(const int *local_vect_size,
-                    const int *comm_size,
-                    const int *rank,
-                    const int *sobol_rank,
-                    const int *sobol_group,
-                    MPI_Comm  *comm,
-                    const int *coupling);
+  void melissa_init(const char *field_name,
+                    const int  *local_vect_size,
+                    const int  *comm_size,
+                    const int  *rank,
+                    const int  *simu_id,
+                    MPI_Comm   *comm,
+                    const int  *coupling);
         </code></pre>
         <pre class="prettyprint f mpi"><code class="lang-fortran">
-  subroutine melissa_init(local_vect_size,&
+  subroutine melissa_init(field_name,&
+                          local_vect_size,&
                           comm_size,&
                           rank,&
-                          sobol_rank,&
-                          sobol_group,&
+                          simu_id,&
                           comm,&
                           coupling)
-  integer :: local_vect_size
-  integer :: comm_size
-  integer :: rank
-  integer :: sobol_rank
-  integer :: sobol_group
-  integer :: comm
-  integer :: coupling
+  character(kind=C_CHAR),dimension(*) :: field_name        
+  integer                             :: local_vect_size
+  integer                             :: comm_size
+  integer                             :: rank
+  integer                             :: simu_id
+  integer                             :: comm
+  integer                             :: coupling
         </code></pre>
         <pre class="prettyprint c nompi"><code class="lang-c">
-  void melissa_init_no_mpi(const int *vect_size,
-                           const int *sobol_rank,
-                           const int *sobol_group);
+  void melissa_init_no_mpi(const char *field_name,
+                           const int *vect_size,
+                           const int *simu_id);
         </code></pre>
         <pre class="prettyprint f nompi"><code class="lang-fortran">
-  subroutine melissa_init_no_mpi(vect_size,&
-                                 sobol_rank,&
-                                 sobol_group)
-  integer :: vect_size
-  integer :: sobol_rank
-  integer :: sobol_group
+  subroutine melissa_init_no_mpi(field_name,&
+                                 vect_size,&
+                                 simu_id)
+  character(kind=C_CHAR),dimension(*) :: field_name   
+  integer                             :: vect_size
+  integer                             :: simu_id
         </code></pre>
        
         variables:
@@ -196,8 +196,7 @@
           <li><code class="code">vect_size</code>: the size of the local result vector</li>
           <span class="mpi"><li><code class="code">comm_size</code>: the size of the local MPI communicator</li></span>
           <span class="mpi"><li><code class="code">rank</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group. Should be 0 if Sobol' indices are not computed.</li>
-          <span class="mpi"><li><code class="code">sobol_group</code>: the ID of the group in the study. A group is oune simulation if Sobol' indices are not computed.</li></span>
+          <span><li><code class="code">simu_id</code>: the ID of the simulation in the study. This number is given by Melissa Launcher.</li></span>
           <span class="mpi"><li><code class="code">comm</code>: the local MPI communicator</li></span>
           <li><code class="code">coupling</code>: 1 if the simulations in a group are in the same MPI MPMD communicator, 0 otherwhise. Not used if Sobol' indices are not computed.</li>
         </ul>
@@ -224,41 +223,35 @@
                     const char *field_name,
                     double     *send_vect,
                     const int  *rank,
-                    const int  *sobol_rank,
-                    const int  *sobol_group);
+                    const int  *simu_id);
         </code></pre>
         <pre class="prettyprint f mpi"><code class="lang-fortran">
   subroutine melissa_send(time_step,&
                           field_name,&
                           send_vect,&
                           rank,&
-                          sobol_rank,&
-                          sobol_group)
+                          simu_id)
   integer                :: time_step
   character,dimension(*) :: field_name
   real*8,dimension(*)    :: send_vect
   integer                :: rank
-  integer                :: sobol_rank
-  integer                :: sobol_group
+  integer                :: simu_id
         </code></pre>
         <pre class="prettyprint c nompi"><code class="lang-c">
   void melissa_send_no_mpi(const int  *time_step,
                            const char *field_name,
                            double     *send_vect,
-                           const int  *sobol_rank,
-                           const int  *sobol_group);
+                           const int  *simu_id);
         </code></pre>
         <pre class="prettyprint f nompi"><code class="lang-c">
   subroutine melissa_send_no_mpi(time_step,&
                                  field_name,&
                                  send_vect,&
-                                 sobol_rank,&
-                                 sobol_group)
+                                 simu_id)
   integer                :: time_step
   character,dimension(*) :: field_name
   real*8,dimension(*)    :: send_vect
-  integer                :: sobol_rank
-  integer                :: sobol_group
+  integer                :: simu_id
         </code></pre>
         variables:
        
@@ -267,8 +260,7 @@
           <li><code class="code">field_name</code>: the name of the field sent</li>
           <li><code class="code">send_vect</code>: the vector to send to Melissa Server</li>
           <span class="mpi"><li><code class="code">rank</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
-          <li><code class="code">sobol_group</code>: the ID of the group in the study</li>
+          <li><code class="code">simu_id</code>: the ID of the simulation in the study</li>
         </ul>
         
        <h3>
@@ -284,61 +276,60 @@
      
       <h2 id="simu">Solver Instrumentation</h2>
       <p>
-        To use the heat equation solver with Melissa, we first have to define a way to pass the parameter sample ID and the Sobol rank to the numerical simulation solver.
+        To use the heat equation solver with Melissa, we first have to define a way to pass the simulation ID to the solver.
         Melissa will need it to identify which simulation sent the data.
         In our case, we will do that by adding arguments to the command line.<br />
-        We first store the sample ID and the Sobol's rank of the simulation in two integers.
+        We store the simulation ID as an integer.
         The solver can then take from one to five input parameters, stored in five doubles.
        
         <pre class="prettyprint c"><code class="lang-c">
-  int sample_id = 0;
-  int sobol_rank = 0;
+  int simu_id = 0;
   double param[5];
 
-  if (argc < 4)
+  if (argc < 3)
   {
       fprintf (stderr, "Missing parameter");
       return -1;
   }
-  sobol_rank = (int)strtol(argv[1], NULL, 10); // sobol rank
-  sample_id = (int)strtol(argv[2], NULL, 10); // sobol group
-  param[0] = strtod(argv[3], NULL); // initial temperature
+  simu_id = (int)strtol(argv[1], NULL, 10); // simulation ID
 
-  for (n=0; n<4; n++)
+  for (n=0; n<5; n++)
   {
-    param[n+1] = param[0];
-    if (argc > n+4)
+    param[n] = 0;
+    if (argc > n+2)
     {
-       param[n+1] = strtod(argv[n+4], NULL);
+       param[n] = strtod(argv[n+2], NULL);
     }
   }
         </code></pre>
        
         <pre class="prettyprint f"><code class="lang-fortran">
-  integer :: sample_id = 0
-  integer :: sobol_rank = 0
+  integer :: simu_id = 0
   real*8,dimension(5) :: param
  
-  if (iargc() .lt. 4) then
+  param(:) = 0
+  if (iargc() .lt. 3) then
     print*,"Missing parameter"
     return
   endif
 
   call getarg(1, arg)
-  read( arg, * ) sobol_rank ! sobol rank
-  call getarg(2, arg)
-  read( arg, * ) sample_id ! sobol group
-  call getarg(3, arg)
-  read( arg, * ) param(1) ! initial temperature
-  param(:) = param(1)
+  read( arg, * ) simu_id ! simulation id
 
-  do n=5, 8
+  do n=2, 6
     if(iargc() .ge. n) then
-      call getarg(n-1, arg)
-      read( arg, * ) param(n-3)
+      call getarg(n, arg)
+      read( arg, * ) param(n-1)
     endif
   enddo
         </code></pre>
+        We also need to give a "name" to the computed field:
+        <pre class="prettyprint c"><code class="lang-c">
+  char *field_name = "heat";
+        </code></pre>
+        <pre class="prettyprint f mpi"><code class="lang-fortran">
+        </code></pre>
+  character(len=5) :: name = C_CHAR_"heat"
         <span class="mpi">
         In the case of Sobol' indices computation, we must define the way simulations are connected inside a group.
         If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
@@ -353,12 +344,17 @@
         <pre class="prettyprint f"><code class="lang-fortran">
   integer :: coupling = 1
         </code></pre>
-        Then split MPI_COMM_WORLD by simulation rank in the simulation group:
+        Then split MPI_COMM_WORLD by simulation in the simulation group:
         <pre class="prettyprint c"><code class="lang-c">
-  MPI_Comm_split(MPI_COMM_WORLD, sobol_rank, me, &comm);
+  int *appnum, info;
+  MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_APPNUM, &appnum, &info);
+  MPI_Comm_split(MPI_COMM_WORLD, *appnum, me, &comm);
         </code></pre>
         <pre class="prettyprint f"><code class="lang-fortran">
-  call MPI_Comm_split(MPI_COMM_WORLD, sobol_rank, me, comm, statinfo);
+  integer(kind=MPI_ADDRESS_KIND) :: appnum
+  integer :: info
+  call MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_APPNUM, appnum, info);
+  call MPI_Comm_split(MPI_COMM_WORLD, appnum, me, comm, info);
         </code></pre>
         </span>
         To use the Melissa functions, we have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
@@ -376,25 +372,25 @@
         <span class="mpi">It takes seven arguments:</span>
         <span class="nompi">It takes tree arguments:</span>
         <ul>
+          <li><code class="code">field_name</code>: the unique name of the field to send</li>
           <li><code class="code">vect_size</code>: the size of the local result vector</li>
           <span class="mpi"><li><code class="code">np</code>: the size of the local MPI communicator</li></span>
           <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
-          <span class="mpi"><li><code class="code">sample_id</code>: the ID of the group in the study</li></span>
+          <span><li><code class="code">simu_id</code>: the ID of the simulation in the study</li></span>
           <span class="mpi"><li><code class="code">comm</code>: the local MPI communicator</li></span>
           <li><code class="code">coupling</code>: the coupling variable</li>
         </ul>
         <pre class="prettyprint c mpi"><code class="lang-c">
-  melissa_init(&vect_size, &np, &me, &sobol_rank, &sample_id, &comm, &coupling);
+  melissa_init(field_name, &vect_size, &np, &me, &simu_id, &comm, &coupling);
         </code></pre>
         <pre class="prettyprint f mpi"><code class="lang-fortran">
-  call melissa_init(vect_size, np, me, sobol_rank, sample_id, comm, coupling)
+  call melissa_init(field_name, vect_size, np, me, simu_id, comm, coupling)
         </code></pre>
         <pre class="prettyprint c nompi"><code class="lang-c">
-  melissa_init_no_mpi(&vect_size, &sobol_rank, &sample_id);
+  melissa_init_no_mpi(field_name, &vect_size, &simu_id);
         </code></pre>
         <pre class="prettyprint f nompi"><code class="lang-fortran">
-  call melissa_init_no_mpi(vect_size, sobol_rank, sample_id)
+  call melissa_init_no_mpi(field_name, vect_size, simu_id)
         </code></pre>
         Inside the main loop, the result vector is updated by the <code class="code">conjgrad</code> function.
         Send this updated vector to Melissa Server by calling <span class="mpi"><code class="code">melissa_send</code></span><span class="nompi"><code class="code">melissa_send_no_mpi</code></span> right after the <code class="code">conjgrad</code> function.
@@ -405,25 +401,24 @@
           <li><code class="code">field_name</code>: the name of the field sent</li>
           <li><code class="code">u</code>: the vector to send to Melissa Server</li>
           <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
-          <li><code class="code">sample_id</code>: the ID of the group in the study</li>
+          <li><code class="code">simu_id</code>: the ID of the simulation in the study</li>
         </ul>
         <pre class="prettyprint c mpi"><code class="lang-c">
   conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon, &i1, &in, &np,
             &me, &next, &previous, &fcomm);
-  melissa_send (&n, field_name, u, &me, &sobol_rank, &sample_id);
+  melissa_send (&n, field_name, u, &me, &simu_id);
         </code></pre>
         <pre class="prettyprint f mpi"><code class="lang-fortran">
   call conjgrad(A, F, U, nx, ny, epsilon, i1, in, np, me, next, previous, comm)
-  call melissa_send(n, name, u, me, sobol_rank, sample_id)
+  call melissa_send(n, name, u, me, simu_id)
         </code></pre>
         <pre class="prettyprint c nompi"><code class="lang-c">
   conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon);
-  melissa_send_no_mpi(&n, field_name, u, &sobol_rank, &sample_id);
+  melissa_send_no_mpi(&n, field_name, u, &simu_id);
         </code></pre>
         <pre class="prettyprint f nompi"><code class="lang-fortran">
   call conjgrad(A, F, U, nx, ny, epsilon)
-  call melissa_send_no_mpi(n, name, u, sobol_rank, sample_id)
+  call melissa_send_no_mpi(n, name, u, simu_id)
         </code></pre>
         After the main loop, call <code class="code">melissa_finalize</code> to free Melissa structures and disconnect the simulations from the server.
         This function does not take any argument.
@@ -537,7 +532,7 @@
         This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code>. It is used to reboot a simulation group in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> function by default.
         
         <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
-        Melissa Launcher calls this function right before launching each simulation job. You can make it block until you want to launch the next simulation.
+        Melissa Launcher calls this function right before launching each simulation job. If it returns False, the launcher will not launch the simulation. Instead, il will wait one second, check the fault tolerance mechanism, and ther retry to launch the simulation.
         
         <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
         This function is called once at the end of the study. It does nothing by default.
