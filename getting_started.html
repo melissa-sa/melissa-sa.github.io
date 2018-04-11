@@ -14,20 +14,11 @@
           <a href="index.html"><div id="melissa"><img src="latex/logo.png" alt="Melissa" title="Melissa" width="100%"/></div></a>
             <ul class="tablist">
             <li><a href="index.html"><span>About</span></a></li>
-            <li><a href="documentation.html"><span>What is Melissa</span></a></li>
-            <li><a href="doxygen.html"><span>Documentation</span></a></li>
             <li class="current"><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
-              <ul class="tablist2">
-                  <li><a class="active" href="#intro"><span>Introduction</span></a></li>
-                  <li><a class="" href="#install"><span>Installation</span></a></li>
-                  <li><a class="" href="#api"><span>Melissa&#160;API</span></a></li>
-                  <li><a class="" href="#simu"><span>Simulation</span></a></li>
-                  <li><a class="" href="#launcher"><span>Melissa&#160;Launcher</span></a></li>
-              </ul>
+            <li><a href="documentation.html"><span>Documentation</span></a></li>
             <li><a href="gallery.html"><span>Gallery</span></a></li>
             <li><a href="contacts.html"><span>Contacts</span></a></li>
             <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
-            </li>
             </ul>
         </nav>
     <div id="titlearea">
@@ -47,41 +38,6 @@
  
     <section id="tuto_text" class="text">
       <h1>Getting Started</h1><hr/>
-            <h2 id="intro">Introduction</h2>
-            <p>
-              
-              Melissa has a three tier architecture, and is based on a client/server model:
-              <ul>
-                <li> <code class="code">Melissa Server</code>: an independent parallel executable. It receives data from the simulations, updates iterative statistics as soon as possible, then discard the processed data.</li>
-                <li> <code class="code">Melissa API</code>: a shared library to be linked within the numerical simulation solver. It forwards simulation data to Melissa Server.</li>
-                <li> <code class="code">Melissa Master</code>: A Python script in charge of generating and managing the whole global sensitivity study.</li>
-              </ul>
-              <figure>
-                <img src="src/workflow.png" alt="Melissa workflow" title="Melissa workflow" width="80%"/>
-                <figcaption>Melissa Workflow on a Cluster</figcaption>
-              </figure>
-            Melissa can be used within a C or Fortran code, with or without MPI.
-            Before reading this tutorial, select your favorite simulation type and language:
-          </p>
-      <div class="fieldsets">
-        <fieldset class="lang" id="par">
-          <legend>Simulation type</legend> <!-- Titre du fieldset -->
-          <p>
-            <input type="radio" name="MPI" value="nompi" id="MPI" checked/> <label for="MPI">MPI    </label><br />
-            <input type="radio" name="MPI" value="mpi" id="noMPI" /> <label for="noMPI">No MPI</label><br />
-          </p>
-        </fieldset>
-        <fieldset class="lang" id="lang">
-          <legend>Simulation language</legend> <!-- Titre du fieldset -->
-          <p>
-            <input type="radio" name="lang" value="f" id="C" checked/> <label for="C">C</label><br />
-            <input type="radio" name="lang" value="c" id="Fortran" /> <label for="Fortran">Fortran</label><br />
-          </p>
-        </fieldset>
-      </div>
-          <p>
-              We will see below how to install Melissa, how to link it with the numerical simulation solver, and how to manage a sensitivity analysis through a very simple example.
-          </p>
       <h2 id="install">Installation</h2>
       <p>
         First, download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>.<br />
@@ -95,6 +51,7 @@
   cmake ../source
   make
   make install
+  source ../install/melissa_set_env.sh
         </code></pre>
       </p>
       <h3 id="options">CMake options</h3>
@@ -106,10 +63,6 @@
           If Doxygen is found, builds the Doxygen documentation.
           <li><code class="code">-DBUILD_EXAMPLES</code> (default: ON)</li>
           Compile the heat equation solver examples.
-          <li><code class="code">-DBUILD_EXAMPLES_WITH_MPI</code> (default: ON)</li>
-          Complie the examples with MPI.
-          <li><code class="code">-DBUILD_SHARED_LIBS</code> (default: OFF)</li>
-          Builds Melissa libraries as shared libraries.
           <li><code class="code">-DBUILD_TESTING</code> (default: ON)</li>
           Builds Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code> or <code class="prettyprint lang-bash">ctest</code>.
           <li><code class="code">-DBUILD_WITH_OpenMP</code> (default: OFF)</li>
@@ -120,438 +73,18 @@
           Defines melissa install directory.
           <li><code class="code">-DINSTALL_ZMQ</code> (default: OFF)</li>
           Enable CMake to install ZeroMQ.
-          <li><code class="code">-DZMQ_DIR</code></li>
-          Sets the path to your ZeroMQ install directory.
         </ul>
       </p>
-      <h2 id="api">Melissa API</h2>
-      Melissa API is a library composed of tree functions, to be integrated in the solver:
-        <ul>
-          <li><code class="code">melissa_init</code></li>
-          <li><code class="code">melissa_send</code></li>
-          <li><code class="code">melissa_finalize</code></li>
-        </ul>
-      
-      In order to use the Melissa functions, you have to link <code class="code"><span class="nompi">melissa_api_no_mpi</span><span class="mpi">melissa_api</span></code> and include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> to your solver.
-        <pre class="prettyprint c mpi"><code class="lang-c">
-  #include &#60melissa_api.h&#62
-        </code></pre>
-        <pre class="prettyprint c nompi"><code class="lang-c">
-  #include &#60melissa_api_no_mpi.h&#62
-        </code></pre>
-        <pre class="prettyprint f"><code class="lang-fortran">
-  include "melissa_api.f90"
-        </code></pre>
-       
-       
-       <h3>
-        <span class="mpi">
-  melissa_init
-        </span>
-        <span class="nompi">
-  melissa_init_no_mpi</span>
-       </h3>
-       <p>Prototype:</p>
-        <pre class="prettyprint c mpi"><code class="lang-c">
-  void melissa_init(const char *field_name,
-                    const int  *local_vect_size,
-                    const int  *comm_size,
-                    const int  *rank,
-                    const int  *simu_id,
-                    MPI_Comm   *comm,
-                    const int  *coupling);
-        </code></pre>
-        <pre class="prettyprint f mpi"><code class="lang-fortran">
-  subroutine melissa_init(field_name,&
-                          local_vect_size,&
-                          comm_size,&
-                          rank,&
-                          simu_id,&
-                          comm,&
-                          coupling)
-  character(kind=C_CHAR),dimension(*) :: field_name        
-  integer                             :: local_vect_size
-  integer                             :: comm_size
-  integer                             :: rank
-  integer                             :: simu_id
-  integer                             :: comm
-  integer                             :: coupling
-        </code></pre>
-        <pre class="prettyprint c nompi"><code class="lang-c">
-  void melissa_init_no_mpi(const char *field_name,
-                           const int *vect_size,
-                           const int *simu_id);
-        </code></pre>
-        <pre class="prettyprint f nompi"><code class="lang-fortran">
-  subroutine melissa_init_no_mpi(field_name,&
-                                 vect_size,&
-                                 simu_id)
-  character(kind=C_CHAR),dimension(*) :: field_name   
-  integer                             :: vect_size
-  integer                             :: simu_id
-        </code></pre>
-       
-        variables:
-        <ul>
-          <li><code class="code">vect_size</code>: the size of the local result vector</li>
-          <span class="mpi"><li><code class="code">comm_size</code>: the size of the local MPI communicator</li></span>
-          <span class="mpi"><li><code class="code">rank</code>: the process rank in the local MPI communicator</li></span>
-          <span><li><code class="code">simu_id</code>: the ID of the simulation in the study. This number is given by Melissa Launcher.</li></span>
-          <span class="mpi"><li><code class="code">comm</code>: the local MPI communicator</li></span>
-          <li><code class="code">coupling</code>: 1 if the simulations in a group are in the same MPI MPMD communicator, 0 otherwhise. Not used if Sobol' indices are not computed.</li>
-        </ul>
-<!--        <ul>
-          <li><code class="code">n</code>: the current iteration number</li>
-          <li><code class="code">field_name</code>: the name of the field sent</li>
-          <li><code class="code">u</code>: the vector to send to Melissa Server</li>
-          <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
-          <li><code class="code">sample_id</code>: the ID of the group in the study</li>
-        </ul>-->
-       <h3>
-        <span class="mpi">
-  melissa_send
-        </span>
-        <span class="nompi">
-  melissa_send_no_mpi</span>
-       </h3>
-       
-       
-       <p>Prototype:</p>
-        <pre class="prettyprint c mpi"><code class="lang-c">
-  void melissa_send(const int  *time_step,
-                    const char *field_name,
-                    double     *send_vect,
-                    const int  *rank,
-                    const int  *simu_id);
-        </code></pre>
-        <pre class="prettyprint f mpi"><code class="lang-fortran">
-  subroutine melissa_send(time_step,&
-                          field_name,&
-                          send_vect,&
-                          rank,&
-                          simu_id)
-  integer                :: time_step
-  character,dimension(*) :: field_name
-  real*8,dimension(*)    :: send_vect
-  integer                :: rank
-  integer                :: simu_id
-        </code></pre>
-        <pre class="prettyprint c nompi"><code class="lang-c">
-  void melissa_send_no_mpi(const int  *time_step,
-                           const char *field_name,
-                           double     *send_vect,
-                           const int  *simu_id);
-        </code></pre>
-        <pre class="prettyprint f nompi"><code class="lang-c">
-  subroutine melissa_send_no_mpi(time_step,&
-                                 field_name,&
-                                 send_vect,&
-                                 simu_id)
-  integer                :: time_step
-  character,dimension(*) :: field_name
-  real*8,dimension(*)    :: send_vect
-  integer                :: simu_id
-        </code></pre>
-        variables:
-       
-        <ul>
-          <li><code class="code">time_step</code>: statistics timestep</li>
-          <li><code class="code">field_name</code>: the name of the field sent</li>
-          <li><code class="code">send_vect</code>: the vector to send to Melissa Server</li>
-          <span class="mpi"><li><code class="code">rank</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">simu_id</code>: the ID of the simulation in the study</li>
-        </ul>
-        
-       <h3>
-         melissa_finalize
-       </h3>
-       <p>Prototype:</p>
-        <pre class="prettyprint c"><code class="lang-c">
-  void melissa_finalize();
-        </code></pre>
-        <pre class="prettyprint f"><code class="lang-c">
-  subroutine melissa_finalize();
-        </code></pre>
-     
-      <h2 id="simu">Solver Instrumentation</h2>
-      <p>
-        To use the heat equation solver with Melissa, we first have to define a way to pass the simulation ID to the solver.
-        Melissa will need it to identify which simulation sent the data.
-        In our case, we will do that by adding arguments to the command line.<br />
-        We store the simulation ID as an integer.
-        The solver can then take from one to five input parameters, stored in five doubles.
-       
-        <pre class="prettyprint c"><code class="lang-c">
-  int simu_id = 0;
-  double param[5];
-
-  if (argc < 3)
-  {
-      fprintf (stderr, "Missing parameter");
-      return -1;
-  }
-  simu_id = (int)strtol(argv[1], NULL, 10); // simulation ID
-
-  for (n=0; n<5; n++)
-  {
-    param[n] = 0;
-    if (argc > n+2)
-    {
-       param[n] = strtod(argv[n+2], NULL);
-    }
-  }
-        </code></pre>
-       
-        <pre class="prettyprint f"><code class="lang-fortran">
-  integer :: simu_id = 0
-  real*8,dimension(5) :: param
- 
-  param(:) = 0
-  if (iargc() .lt. 3) then
-    print*,"Missing parameter"
-    return
-  endif
-
-  call getarg(1, arg)
-  read( arg, * ) simu_id ! simulation id
-
-  do n=2, 6
-    if(iargc() .ge. n) then
-      call getarg(n, arg)
-      read( arg, * ) param(n-1)
-    endif
-  enddo
-        </code></pre>
-        We also need to give a "name" to the computed field:
-        <pre class="prettyprint c"><code class="lang-c">
-  char *field_name = "heat";
-        </code></pre>
-        <pre class="prettyprint f mpi"><code class="lang-fortran">
-        </code></pre>
-  character(len=5) :: name = C_CHAR_"heat"
-        <span class="mpi">
-        In the case of Sobol' indices computation, we must define the way simulations are connected inside a group.
-        If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
-        Links between simulations will be MPI communications in that case.
-        Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ.
-        This is called the "not coupled" case.<br />
-        In the heat solver, we can easily split MPI communicator, so we will use a coupled case.
-        Define a new integer variable, with a value of <code class="code">1</code>:
-        <pre class="prettyprint c"><code class="lang-c">
-  int coupling = 1;
-        </code></pre>
-        <pre class="prettyprint f"><code class="lang-fortran">
-  integer :: coupling = 1
-        </code></pre>
-        Then split MPI_COMM_WORLD by simulation in the simulation group:
-        <pre class="prettyprint c"><code class="lang-c">
-  int *appnum, info;
-  MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_APPNUM, &appnum, &info);
-  MPI_Comm_split(MPI_COMM_WORLD, *appnum, me, &comm);
-        </code></pre>
-        <pre class="prettyprint f"><code class="lang-fortran">
-  integer(kind=MPI_ADDRESS_KIND) :: appnum
-  integer :: info
-  call MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_APPNUM, appnum, info);
-  call MPI_Comm_split(MPI_COMM_WORLD, appnum, me, comm, info);
-        </code></pre>
-        </span>
-        To use the Melissa functions, we have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
-        <pre class="prettyprint c mpi"><code class="lang-c">
-  #include &#60melissa_api.h&#62
-        </code></pre>
-        <pre class="prettyprint c nompi"><code class="lang-c">
-  #include &#60melissa_api_no_mpi.h&#62
-        </code></pre>
-        <pre class="prettyprint f"><code class="lang-fortran">
-  include "melissa_api.f90"
-        </code></pre>
-        The first Melissa function can be called before the main <code class="code">for</code> loop.
-        It has to be called exactly once <span class="mpi"> by every process</span>.
-        <span class="mpi">It takes seven arguments:</span>
-        <span class="nompi">It takes tree arguments:</span>
-        <ul>
-          <li><code class="code">field_name</code>: the unique name of the field to send</li>
-          <li><code class="code">vect_size</code>: the size of the local result vector</li>
-          <span class="mpi"><li><code class="code">np</code>: the size of the local MPI communicator</li></span>
-          <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
-          <span><li><code class="code">simu_id</code>: the ID of the simulation in the study</li></span>
-          <span class="mpi"><li><code class="code">comm</code>: the local MPI communicator</li></span>
-          <li><code class="code">coupling</code>: the coupling variable</li>
-        </ul>
-        <pre class="prettyprint c mpi"><code class="lang-c">
-  melissa_init(field_name, &vect_size, &np, &me, &simu_id, &comm, &coupling);
-        </code></pre>
-        <pre class="prettyprint f mpi"><code class="lang-fortran">
-  call melissa_init(field_name, vect_size, np, me, simu_id, comm, coupling)
-        </code></pre>
-        <pre class="prettyprint c nompi"><code class="lang-c">
-  melissa_init_no_mpi(field_name, &vect_size, &simu_id);
-        </code></pre>
-        <pre class="prettyprint f nompi"><code class="lang-fortran">
-  call melissa_init_no_mpi(field_name, vect_size, simu_id)
-        </code></pre>
-        Inside the main loop, the result vector is updated by the <code class="code">conjgrad</code> function.
-        Send this updated vector to Melissa Server by calling <span class="mpi"><code class="code">melissa_send</code></span><span class="nompi"><code class="code">melissa_send_no_mpi</code></span> right after the <code class="code">conjgrad</code> function.
-        <span class="mpi">This function takes six arguments:</span>
-        <span class="nompi">This function takes five arguments:</span>
-        <ul>
-          <li><code class="code">n</code>: the current iteration number</li>
-          <li><code class="code">field_name</code>: the name of the field sent</li>
-          <li><code class="code">u</code>: the vector to send to Melissa Server</li>
-          <span class="mpi"><li><code class="code">me</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">simu_id</code>: the ID of the simulation in the study</li>
-        </ul>
-        <pre class="prettyprint c mpi"><code class="lang-c">
-  conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon, &i1, &in, &np,
-            &me, &next, &previous, &fcomm);
-  melissa_send (&n, field_name, u, &me, &simu_id);
-        </code></pre>
-        <pre class="prettyprint f mpi"><code class="lang-fortran">
-  call conjgrad(A, F, U, nx, ny, epsilon, i1, in, np, me, next, previous, comm)
-  call melissa_send(n, name, u, me, simu_id)
-        </code></pre>
-        <pre class="prettyprint c nompi"><code class="lang-c">
-  conjgrad (&a[0], &f[0], &u[0], &nx, &ny, &epsilon);
-  melissa_send_no_mpi(&n, field_name, u, &simu_id);
-        </code></pre>
-        <pre class="prettyprint f nompi"><code class="lang-fortran">
-  call conjgrad(A, F, U, nx, ny, epsilon)
-  call melissa_send_no_mpi(n, name, u, simu_id)
-        </code></pre>
-        After the main loop, call <code class="code">melissa_finalize</code> to free Melissa structures and disconnect the simulations from the server.
-        This function does not take any argument.
-        <pre class="prettyprint c"><code class="lang-c">
-  melissa_finalize();
-        </code></pre>
-        <pre class="prettyprint f"><code class="lang-fortran">
-  call melissa_finalize()
-        </code></pre>
-        
-        Link the code to the <code class="code">melissa_api</code> library, and compile it.
-      </p>
-        
-     
-      <h2 id="launcher">Melissa Launcher</h2>
-      <p>
-        Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.<br />
-        This is done by giving the launcher some functions and variables through a python file.
-        The file must be called <code class="code">options.py</code>, and is provided in <code class="code">launcher/options.py</code>. The options suported by Melissa are predefined in this file. The user must copy this file and modify it to neet his needs.
-        There are four sets of variables to define, as dictionaries.
-        <ul>
-          <li><code class="code">GLOBAL_OPTIONS</code>: contains informations about your environement.<br />
-          <li><code class="code">STUDY_OPTIONS</code>: sets the parameters of your sensitivity study. They will be used by the launcher to generate its internal structures for the study management.</li>
-          <li><code class="code">MELISSA_STATS</code>: are used to activate (or not) the iterative statistics.</li>
-          <li><code class="code">USER_FUNCTIONS</code>: are pointers to user defined functions, used by the launcher. Some of them are optional, others are mandatory. We will describe these functions in this section.</li>
-        </ul>
-        Note that you can add fields to the option dictionaries, and they can be used in the user defined functions.
-      </p>
-      <h3>Functions</h3>
-      Melissa Launcher needs the mandatory functions to be defined. Otherwise, it will return without runing the study.
-      The optional functions are ignored if they are not defined by the user.<br />
-      Note that the launcher sees simulations as "groups". In the case of classical statistics (i.e. not Sobol' indices), one group corresponds to one simulation. When Sobol' indices are required, simulations have to be launched by group, in the same job allocation.
-      <ul>
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code> (optional):</pre></li>
-        This function is called only once, before starting the study. It is called from the directory set in <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter_set']</code> (mandatory):</pre></li>
-        This function is used by Melissa launcher to draw simulations parameter sets. it must return a Numpy array of floats of the size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_group']</code> (optional):</pre></li>
-        This function is called once for each group in the study, before launching the study. Its behavior is the same as <code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code> (mandatory):</pre></li>
-        Once every simulation, group and parameter set is defined, Melissa Launcher uses this function to launch Melissa Server. The function takes a <code class="code">Server</code> object for argument, and needs to set the server job ID in <code class="code">server.job_id</code>.
-        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID. The server command line options are in <code class="code">server.cmd_opt</code>, you should not modify it.<br />
-        An example for a Slurm cluster:
-        <pre class="prettyprint"><code class="lang-python">
-  import subprocess
-
-  def launch_server(server):
-      os.chdir(GLOBAL_OPTIONS['working_directory'])
-      
-      # create a job script
-      fichier=open("run_server.sh", "w")
-      contenu  = "#!/bin/bash \n"
-      contenu  = "# Example with Slurm \n"
-      contenu += "#SBATCH -N 4 \n"
-      contenu += "#SBATCH --job-name=Melissa_server \n"
-      contenu += "mkdir stats${SLURM_JOB_ID}.resu \n"
-      contenu += "cd stats${SLURM_JOB_ID}.resu \n"
-      contenu += "mpirun "+server.path+"/server "+server.cmd_opt+" & \n"
-      contenu += "wait %1 \n"
-      contenu += "cd "+workdir+" \n"
-      fichier.write(contenu)
-      fichier.close()
-      
-      # run the job script
-      proc = subprocess.Popen('sbatch "./run_server.sh"',
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              shell=True,
-                              universal_newlines=True)
-                              
-      # get the job ID
-      (out, err) = proc.communicate()
-      server.job_id = out.split()[-1]
-
-  USER_FUNCTIONS['launch_server'] = launch_server
-        </code></pre>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> (mandatory):</pre></li>
-        This function is used to launch simulations. The function takes a <code class="code">Group</code> object for argument, and needs to set the group job ID in <code class="code">group.job_id</code>.
-        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID.
-        You have to copy the file called "server_name.txt" from the directory <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code> to the location where the simulations will run. The simulations will read it to retrieve the server node name in order to contact it.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_server_job']</code> (mandatory):</pre></li>
-        This function is called while the server is running. It checks the job's status in the scope of the fault tolerance mechanism.
-        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Server</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_group_job']</code> (mandatory):</pre></li>
-        This function is called while a simulation is running. It checks the job's status in the scope of the fault tolerance mechanism.
-        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Simulation</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> (mandatory):</pre></li>
-        This function is calles by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
-        The job ID is defined in <code class="code">job.job_id</code>.<br />
-        An example with a Slurm job:
-        <pre class="prettyprint"><code class="lang-python">
-  import os
-  
-  def cancel_job(job):
-      os.system('scancel '+job.job_id)
-      
-  USER_FUNCTIONS['cancel_job'] = cancel_job
-        </code></pre>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_server']</code> (optional):</pre></li>
-        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code>. It is used to reboot the server in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">launch_server</code> function by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_group']</code> (optional):</pre></li>
-        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code>. It is used to reboot a simulation group in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> function by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
-        Melissa Launcher calls this function right before launching each simulation job. If it returns False, the launcher will not launch the simulation. Instead, il will wait one second, check the fault tolerance mechanism, and ther retry to launch the simulation.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
-        This function is called once at the end of the study. It does nothing by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['finalize']</code> (optional):</pre></li>
-        The same as <code  class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code>.
-      </ul>
-     
-      <h3 id="run">Run the study</h3>
-      
-      <p>
-        To run a study with the heat equation solver, call the launcher with the path to your <code class="code">option.py</code> file:
+      <h2 id="tests">Testing</h2>
+      Melissa comes with a small example, used as a test for the installation.
+      The examples are built if CMake finds a Fortran compiler and if you enabeled the <code class="code">BUILD_EXAMPLES</code> option.
+      The examples are installed in <code class="prettyprint lang-bash">install/share/examples</code>. We will use the heat equation solver example to test the installation.
+      From the <code class="prettyprint lang-bash">install/share/examples/heat_example</code> directory, run:
         <pre class="prettyprint"><code class="lang-bash">
-  cd examples/heat_example
-  python ../../launcher/melissa_launcher ./
+  melissa_launcher
         </code></pre>
-        The results will be in the directory <code class="code">STATS</code>, in files of the form: <code class="code">&#60field_name&#62_&#60stat&#62.&#60time_stamp&#62</code><br />
-        For example, the variance of the field "heat" at the first timestep whould be: <code class="code">heat_variance.001</code>
-      </p>
+        It will launch a pre-configured sensitivity analysis.
+        To see more details about this example, check the <a href="documentation.html#intro"><span>use case documentation</span></a>.
     </section>
     </div>
     <script>
@@ -602,55 +135,6 @@
         }
         plop();
         
-        function rendre_actif(element)
-        {
-            document.querySelector(".active").className = "";
-            document.querySelector('a[href="#' + element + '"]').className = "active";
-        }
-        
-        window.onscroll = function(){
-            var scroll = window.scrollY;
-            if(scroll >= document.getElementById("launcher").offsetTop - 10)
-            {
-                rendre_actif("launcher");
-            }
-            else if(scroll >= document.getElementById("simu").offsetTop - 10)
-            {
-                rendre_actif("simu");
-            }
-            else if(scroll >= document.getElementById("api").offsetTop - 10)
-            {
-                rendre_actif("api");
-            }
-            else if(scroll >= document.getElementById("install").offsetTop - 10)
-            {
-                rendre_actif("install");
-            }
-            else if(scroll >= document.getElementById("intro").offsetTop - 10)
-            {
-                rendre_actif("intro");
-            }
-        }
-        
-        document.querySelector('a[href="launcher"]').onclick = function(){
-            rendre_actif("launcher");
-        }
-        
-        document.querySelector('a[href="simu"]').onclick = function(){
-            rendre_actif("simu");
-        }
-        
-        document.querySelector('a[href="api"]').onclick = function(){
-            rendre_actif("api");
-        }
-        
-        document.querySelector('a[href="install"]').onclick = function(){
-            rendre_actif("install");
-        }
-        
-        document.querySelector('a[href="intro"]').onclick = function(){
-            rendre_actif("intro");
-        }
         //-->
     </script>
   </body>
