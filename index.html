@@ -15,7 +15,6 @@
             <li><a class="active" href="#overview"><span>Overview</span></a></li>
             <li><a class="" href="#news"><span>News</span></a></li>
             <li><a class="" href="#papers"><span>Publications</span></a></li>
-            </li>
             </ul>
             <li><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
             <li><a href="documentation.html"><span>Documentation</span></a></li>
@@ -151,39 +150,71 @@
         
     <script>
         <!--
+        var my_on_click = 0;
         
+        document.addEventListener('scroll',scroll_func);
+        document.querySelector('a[href="#papers"]').addEventListener('click',click_papers);
+        document.querySelector('a[href="#news"]').addEventListener('click',click_news);
+        document.querySelector('a[href="#overview"]').addEventListener('click',click_overview);
+        
+        function click_papers()
+        {
+            my_on_click =1;
+            rendre_actif("papers");
+        }
+        
+        function click_news()
+        {
+            my_on_click =1;
+            rendre_actif("news");
+        }
+        
+        function click_overview()
+        {
+            my_on_click =1;
+            rendre_actif("overview");
+        }
+        
+//         document.onscroll = function(onclick){
+//             if(" ".localeCompare(onclick) == 0)
+        function scroll_func()
+        {
+            if(my_on_click ==1)
+            {
+                my_on_click = 0;
+            }
+            else
+            {
+                var scroll = window.scrollY;
+                if(scroll >= document.getElementById("papers").offsetTop - 10)
+                {
+                    rendre_actif("papers");
+                }
+                else if(scroll >= document.getElementById("news").offsetTop - 10)
+                {
+                    rendre_actif("news");
+                }
+                else if(scroll >= document.getElementById("overview").offsetTop - 10)
+                {
+                    rendre_actif("overview");
+                }
+            }
+        }
+//         
+//         document.querySelector('a[href="#news"]').onclick = function(onclick){
+//             onclick = "news";
+//             rendre_actif(onclick);
+//         }
+//         
+//         document.querySelector('a[href="#overview"]').onclick = function(onclick){
+//             onclick = "overview";
+//             rendre_actif(onclick);
+//         }
+//         
         function rendre_actif(element)
         {
             document.querySelector(".active").className = "";
             document.querySelector('a[href="#' + element + '"]').className = "active";
-        }
-        
-        window.onscroll = function(){
-            var scroll = window.scrollY;
-            if(scroll >= document.getElementById("papers").offsetTop - 10)
-            {
-                rendre_actif("papers");
-            }
-            else if(scroll >= document.getElementById("news").offsetTop - 10)
-            {
-                rendre_actif("news");
-            }
-            else if(scroll >= document.getElementById("overview").offsetTop - 10)
-            {
-                rendre_actif("overview");
-            }
-        }
-        
-        document.querySelector('a[href="papers"]').onclick = function(){
-            rendre_actif("papers");
-        }
-        
-        document.querySelector('a[href="news"]').onclick = function(){
-            rendre_actif("news");
-        }
-        
-        document.querySelector('a[href="overview"]').onclick = function(){
-            rendre_actif("overview");
         }
         //-->
     </script>
