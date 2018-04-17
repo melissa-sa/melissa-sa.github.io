@@ -2,11 +2,13 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <link href="prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="prettify.js"></script>
         <link rel="stylesheet" href="melissa.css" />
         <title>Melissa</title>
     </head>
 
-    <body>
+    <body onload="prettyPrint()">
         <nav id="navrow1" class="topmenu">
           <a href="index.html"><div id="melissa"><img src="latex/logo.png" alt="Melissa" title="Melissa" width="100%"/></div></a>
             <ul class="tablist">
@@ -18,6 +20,7 @@
                 <li><a class="" href="#api"><span>Melissa&#160;API</span></a></li>
                 <li><a class="" href="#simu" id="simu_onglet"><span">Simulation</span></a></li>
                 <li><a class="" href="#launcher"><span>Melissa&#160;Launcher</span></a></li>
+                <li><a class="" href="#sbs"><span>Step-by-setp</span></a></li>
             </ul>
             <li><a href="gallery.html"><span>Gallery</span></a></li>
             <li><a href="contacts.html"><span>Contacts</span></a></li>
@@ -171,6 +174,9 @@
           <li><code class="code">sobol_rank</code>: the rank of the simulation in the Sobol' group</li>
           <li><code class="code">sample_id</code>: the ID of the group in the study</li>
         </ul>-->
+        <p>
+        This function must be called once for each field to send to Melissa Server. The field names have to be declarated in the launcher option file, as we will see later.
+        </p>
        <h3>
         <span class="mpi">
   melissa_send
@@ -223,9 +229,11 @@
           <li><code class="code">field_name</code>: the name of the field sent</li>
           <li><code class="code">send_vect</code>: the vector to send to Melissa Server</li>
           <span class="mpi"><li><code class="code">rank</code>: the process rank in the local MPI communicator</li></span>
-          <li><code class="code">simu_id</code>: the ID of the simulation in the study</li>
+          <li><code class="code">simu_id</code>: the ID of the simulation in the study, given by the launcher</li>
         </ul>
-        
+        <p>
+        This function must be called at each time step that needs to be sent to Melissa Server, for each field. It can replace the IO phase of the code. The timestep sent to melissa is not the calculation timestep, but a timestamp incremented at each call to this function, for a given field. It must start at 1 (Fortran numbering).
+        </p>
        <h3>
          melissa_finalize
        </h3>
@@ -236,78 +244,210 @@
         <pre class="prettyprint f"><code class="lang-c">
   subroutine melissa_finalize();
         </code></pre>
-     
-      <h2 id="simu">Solver Instrumentation</h2>
+        <p>
+        <span class="nompi">Must be called at the end of the solver.</span>
+        <span class="mpi">Must be called at the end of the solver, before <code  class="lang-c">MPI_Finalize</code>.</span>
+        </p>
+        
+      <h2 id="launcher">Melissa Launcher</h2>
       <p>
-        To use the heat equation solver with Melissa, we first have to define a way to pass the simulation ID to the solver.
-        Melissa will need it to identify which simulation sent the data.
-        In our case, we will do that by adding arguments to the command line.<br />
+        Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.<br />
+        This is done by giving the launcher some functions and variables through a python file.
+        The file must be called <code class="code">options.py</code>. A empty template of this file is provided in <code class="code">share/launcher/options.py</code>. The options suported by Melissa are predefined in this file. The user must copy this file and modify it to meet his needs.
+        There are four sets of variables to define, as dictionaries.
+        <ul>
+          <li><code class="code">STUDY_OPTIONS</code>: sets the parameters of your sensitivity study. They will be used by the launcher to generate its internal structures for the study management.</li>
+          <li><code class="code">MELISSA_STATS</code>: are used to activate (or not) the iterative statistics.</li>
+          <li><code class="code">USER_FUNCTIONS</code>: are pointers to user defined functions, used by the launcher. Some of them are optional, others are mandatory. We will describe these functions in this section.</li>
+        </ul>
+        Note that you can add fields to the option dictionaries, and they can be used in the user defined functions.
+      </p>
+      <h3>Functions</h3>
+      Melissa Launcher needs the mandatory functions to be defined. Otherwise, it will return without runing the study.
+      The optional functions are ignored if they are not defined by the user.<br />
+      Note that the launcher sees simulations as "groups". In the case of classical statistics (i.e. not Sobol' indices), one group corresponds to one simulation. When Sobol' indices are required, simulations have to be launched by group, in the same job allocation.
+      <ul>
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code> (optional):</pre></li>
+        This function is called only once, before starting the study. It is called from the directory set in <code class="prettyprint lang-python">STUDY_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter_set']</code> (mandatory):</pre></li>
+        This function is used by Melissa launcher to draw simulations parameter sets. it must return a Numpy array of floats of the size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_group']</code> (optional):</pre></li>
+        This function is called once for each group in the study, before launching the study. Its behavior is the same as <code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code>.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code> (mandatory):</pre></li>
+        After every simulation, group and parameter set is defined, Melissa Launcher uses this function to launch Melissa Server. The function takes a <code class="code">Server</code> object for argument, and needs to set the server job ID in <code class="code">server.job_id</code>.
+        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID. The server command line options are in <code class="code">server.cmd_opt</code>, you should not modify it.<br />
+        An example for a Slurm cluster:
+        <pre class="prettyprint"><code class="lang-python">
+  import subprocess
+
+  def launch_server(server):
+      os.chdir(STUDY_OPTIONS['working_directory'])
+      
+      # create a job script
+      fichier=open("run_server.sh", "w")
+      contenu  = "#!/bin/bash \n"
+      contenu  = "# Example with Slurm \n"
+      contenu += "#SBATCH -N 4 \n"
+      contenu += "#SBATCH --job-name=Melissa_server \n"
+      contenu += "mkdir stats${SLURM_JOB_ID}.resu \n"
+      contenu += "cd stats${SLURM_JOB_ID}.resu \n"
+      contenu += "mpirun "+server.path+"/server "+server.cmd_opt+" & \n"
+      contenu += "wait %1 \n"
+      contenu += "cd "+workdir+" \n"
+      fichier.write(contenu)
+      fichier.close()
+      
+      # run the job script
+      proc = subprocess.Popen('sbatch "./run_server.sh"',
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE,
+                              shell=True,
+                              universal_newlines=True)
+                              
+      # get the job ID
+      (out, err) = proc.communicate()
+      server.job_id = out.split()[-1]
+
+  USER_FUNCTIONS['launch_server'] = launch_server
+        </code></pre>
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> (mandatory):</pre></li>
+        This function is used to launch simulations. The function takes a <code class="code">Group</code> object for argument, and needs to set the group job ID in <code class="code">group.job_id</code>.
+        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID.
+        You have to copy the file called "server_name.txt" from the directory <code class="prettyprint lang-python">STUDY_OPTIONS['working_directory']</code> to the location where the simulations will run. The simulations will read it to retrieve the server node name in order to contact it.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_server_job']</code> (mandatory):</pre></li>
+        This function is called while the server is running. It checks the job's status in the scope of the fault tolerance mechanism.
+        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Server</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_group_job']</code> (mandatory):</pre></li>
+        This function is called while a simulation is running. It checks the job's status in the scope of the fault tolerance mechanism.
+        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Simulation</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> (mandatory):</pre></li>
+        This function is calles by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
+        The job ID is defined in <code class="code">job.job_id</code>.<br />
+        An example with a Slurm job:
+        <pre class="prettyprint"><code class="lang-python">
+  import os
+  
+  def cancel_job(job):
+      os.system('scancel '+job.job_id)
+      
+  USER_FUNCTIONS['cancel_job'] = cancel_job
+        </code></pre>
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_server']</code> (optional):</pre></li>
+        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code>. It is used to reboot the server in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">launch_server</code> function by default.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_group']</code> (optional):</pre></li>
+        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code>. It is used to reboot a simulation group in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> function by default.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
+        Melissa Launcher calls this function right before launching each simulation job. If it returns False, the launcher will not launch the simulation. Instead, il will wait one second, check the fault tolerance mechanism, and ther retry to launch the simulation.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
+        This function is called once at the end of the study. It does nothing by default.
+        
+        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['finalize']</code> (optional):</pre></li>
+        The same as <code  class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code>.
+      </ul>
+      
+      
+<!--      ===================  -->
+<!--      Sep by step example  -->
+<!--      ===================  -->
+      
+      
+     
+      <h2 id="sbs">Step-by-step example</h2>
+      <p>
+        In this section, we will use a heat equation solver, available in the examples folder of melissa installation. You will find the code in <code class="prettyprint lang-bash">install/share/examples/heat_example/src</code>. The original solver is in the <span class="c"><code class="code">heat_base.c</code></span><span class="f"><code class="code">heat_base.f90</code></span> file. We will now edit and instrument this file step-by-step, in order to use it in the Melissa Framework. The final result must look like <span class="c mpi"><code class="code">heat.c</code></span><span class="f mpi"><code class="code">heat.f90</code></span><span class="c nompi"><code class="code">heat_no_mpi.c</code></span><span class="f nompi"><code class="code">heat_no_mpi.f90</code></span>, the "final" version of the solver. The corresponding final <code class="code">options.py</code> file is in the <code class="prettyprint lang-bash">install/share/examples/heat_example</code> directory. If you did the "testing" part of the <a href="getting_started.html">Getting Started</a>, you already ran it on your machine.
+        </p>
+      <h3 id="simu">Solver Instrumentation</h3>
+        <p>
+        To use the Melissa functions, we first have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
+        <pre class="prettyprint c mpi"><code class="lang-c">
+  #include &#60melissa_api.h&#62
+        </code></pre>
+        <pre class="prettyprint c nompi"><code class="lang-c">
+  #include &#60melissa_api_no_mpi.h&#62
+        </code></pre>
+        <pre class="prettyprint f"><code class="lang-fortran">
+  include "melissa_api.f90"
+        </code></pre>
+        Before calling Melissa functions in the code, we have to define a way to pass the simulation ID to the solver.
+        Melissa Server will need it to identify which simulation sent the data.<br />
+        The simulation ID is generated by the launcher, and available in the <code class="code">simu_id</code> atribute of the <code class="code">Group</code> object (for example <code class="code">group.simu_id</code>) in the python file  <code class="code">options.py</code>.
+        In our case, we will pass that parameter to the simulation by adding arguments to the command line. We will see later how to handle it in the python side in more detail.<br />
         We store the simulation ID as an integer.
-        The solver can then take from one to five input parameters, stored in five doubles.
+        </P>
+        <p>
+        In the case of Sobol' indices computation, we must also define the way simulations are connected inside a group. Melissa API provides some macros to pass the information to the <code class="prettyprint lang-c">melissa_init</code> function. We could hard-code it in the solver, but in this example we will pass it by command line, as an integer, like the simulation ID. We will describe later the possible values of this parameter.
+        </P>
+        <p>
+        The solver can take from one to five input parameters, stored in five doubles, so the code to get the input parameters should look like this:
        
         <pre class="prettyprint c"><code class="lang-c">
-  int simu_id = 0;
+  int simu_id  = 0;
+  int coupling = MELISSA_COUPLING_DEFAULT;
   double param[5];
 
-  if (argc < 3)
+  if (argc < 4)
   {
       fprintf (stderr, "Missing parameter");
       return -1;
   }
-  simu_id = (int)strtol(argv[1], NULL, 10); // simulation ID
+  simu_id = (int)strtol(argv[1], NULL, 10);  // simulation ID
+  coupling = (int)strtol(argv[2], NULL, 10); // coupling parameter
 
   for (n=0; n<5; n++)
   {
     param[n] = 0;
-    if (argc > n+2)
+    if (argc > n+3)
     {
-       param[n] = strtod(argv[n+2], NULL);
+       param[n] = strtod(argv[n+3], NULL);
     }
   }
         </code></pre>
        
         <pre class="prettyprint f"><code class="lang-fortran">
-  integer :: simu_id = 0
+  integer :: simu_id = 0, coupling = MELISSA_COUPLING_DEFAULT
   real*8,dimension(5) :: param
  
   param(:) = 0
-  if (iargc() .lt. 3) then
+  if (iargc() .lt. 4) then
     print*,"Missing parameter"
     return
   endif
 
   call getarg(1, arg)
   read( arg, * ) simu_id ! simulation id
+  call getarg(2, arg)
+  read( arg, * ) coupling ! coupling method
 
-  do n=2, 6
+  do n=3, 7
     if(iargc() .ge. n) then
       call getarg(n, arg)
-      read( arg, * ) param(n-1)
+      read( arg, * ) param(n-2)
     endif
   enddo
         </code></pre>
-        We also need to give a "name" to the computed field:
-        <pre class="prettyprint c"><code class="lang-c">
-  char *field_name = "heat";
-        </code></pre>
-        <pre class="prettyprint f mpi"><code class="lang-fortran">
-        </code></pre>
-  character(len=5) :: name = C_CHAR_"heat"
-        <span class="mpi">
-        In the case of Sobol' indices computation, we must define the way simulations are connected inside a group.
-        If all the simulations in a Sobol's group can easily be launched in a single MPMD MPI call, we can define a "coupled" group.
+        
+        
+        
+<!--         <span class="mpi"> -->
+        <p>
+        In general, if all the simulations in a Sobol' group can easily be launched in a single MPMD MPI call, we can use the "<code class="code">MELISSA_COUPLING_MPI</code>" coupling mechanism.
         Links between simulations will be MPI communications in that case.
-        Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ.
-        This is called the "not coupled" case.<br />
-        In the heat solver, we can easily split MPI communicator, so we will use a coupled case.
-        Define a new integer variable, with a value of <code class="code">1</code>:
-        <pre class="prettyprint c"><code class="lang-c">
-  int coupling = 1;
-        </code></pre>
-        <pre class="prettyprint f"><code class="lang-fortran">
-  integer :: coupling = 1
-        </code></pre>
-        Then split MPI_COMM_WORLD by simulation in the simulation group:
+        Otherwise, if the simulation relies on MPI_COMM_WORLD for MPI routines or is not MPI at all, simulations have to be connected via ZeroMQ. This is the default coupling mechanism, called "<code class="code">MELISSA_COUPLING_ZMQ</code>".<br />
+        A third coupling mechanism is also available if you have the FlowVR software installed in your environment. It is called "<code class="code">MELISSA_COUPLING_FLOWVR</code>", and we will not use it in this example.<br />
+        In the heat solver, we can easily split MPI communicator, so we will use "<code class="code">MELISSA_COUPLING_MPI</code>".
+        
+        Split MPI_COMM_WORLD by simulation in the simulation group:
         <pre class="prettyprint c"><code class="lang-c">
   int *appnum, info;
   MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_APPNUM, &appnum, &info);
@@ -319,19 +459,23 @@
   call MPI_Comm_get_attr(MPI_COMM_WORLD, MPI_APPNUM, appnum, info);
   call MPI_Comm_split(MPI_COMM_WORLD, appnum, me, comm, info);
         </code></pre>
-        </span>
-        To use the Melissa functions, we have to include <code class="code">melissa_api<span class="f">.f90</span><span class="c nompi">_no_mpi.h</span><span class="c mpi">.h</span></code> at the begining of the code.
-        <pre class="prettyprint c mpi"><code class="lang-c">
-  #include &#60melissa_api.h&#62
+<!--         </span> -->
+        
+        </P>
+        
+        
+        
+        We also need to give a "name" to the computed field. It must be the same name you will put in <code class="prettyprint lang-python">STUDY_OPTIONS['field_names']</code>.
+        <pre class="prettyprint c"><code class="lang-c">
+  char *field_name = "heat1";
         </code></pre>
-        <pre class="prettyprint c nompi"><code class="lang-c">
-  #include &#60melissa_api_no_mpi.h&#62
+        <pre class="prettyprint f mpi"><code class="lang-fortran">
+  character(len=5) :: name = C_CHAR_"heat1"
         </code></pre>
-        <pre class="prettyprint f"><code class="lang-fortran">
-  include "melissa_api.f90"
-        </code></pre>
+        
         The first Melissa function can be called before the main <code class="code">for</code> loop.
-        It has to be called exactly once <span class="mpi"> by every process</span>.
+        It has to be called exactly once <span class="mpi"> by process and</span> by field.
+        <span class="c">For Fortran compatibility, we have to pass the arguments by reference.</span>
         <span class="mpi">It takes seven arguments:</span>
         <span class="nompi">It takes tree arguments:</span>
         <ul>
@@ -396,118 +540,13 @@
       </p>
         
      
-      <h2 id="launcher">Melissa Launcher</h2>
-      <p>
-        Once the simulation is instrumented, Melissa Launcher needs to know how to handle the simulation jobs.<br />
-        This is done by giving the launcher some functions and variables through a python file.
-        The file must be called <code class="code">options.py</code>, and is provided in <code class="code">launcher/options.py</code>. The options suported by Melissa are predefined in this file. The user must copy this file and modify it to neet his needs.
-        There are four sets of variables to define, as dictionaries.
-        <ul>
-          <li><code class="code">GLOBAL_OPTIONS</code>: contains informations about your environement.<br />
-          <li><code class="code">STUDY_OPTIONS</code>: sets the parameters of your sensitivity study. They will be used by the launcher to generate its internal structures for the study management.</li>
-          <li><code class="code">MELISSA_STATS</code>: are used to activate (or not) the iterative statistics.</li>
-          <li><code class="code">USER_FUNCTIONS</code>: are pointers to user defined functions, used by the launcher. Some of them are optional, others are mandatory. We will describe these functions in this section.</li>
-        </ul>
-        Note that you can add fields to the option dictionaries, and they can be used in the user defined functions.
-      </p>
-      <h3>Functions</h3>
-      Melissa Launcher needs the mandatory functions to be defined. Otherwise, it will return without runing the study.
-      The optional functions are ignored if they are not defined by the user.<br />
-      Note that the launcher sees simulations as "groups". In the case of classical statistics (i.e. not Sobol' indices), one group corresponds to one simulation. When Sobol' indices are required, simulations have to be launched by group, in the same job allocation.
-      <ul>
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code> (optional):</pre></li>
-        This function is called only once, before starting the study. It is called from the directory set in <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code>. You can use this function to create a folder tree, copy files, compile code, etc.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter_set']</code> (mandatory):</pre></li>
-        This function is used by Melissa launcher to draw simulations parameter sets. it must return a Numpy array of floats of the size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['create_group']</code> (optional):</pre></li>
-        This function is called once for each group in the study, before launching the study. Its behavior is the same as <code class="prettyprint lang-python">USER_FUNCTIONS['create_study']</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code> (mandatory):</pre></li>
-        Once every simulation, group and parameter set is defined, Melissa Launcher uses this function to launch Melissa Server. The function takes a <code class="code">Server</code> object for argument, and needs to set the server job ID in <code class="code">server.job_id</code>.
-        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID. The server command line options are in <code class="code">server.cmd_opt</code>, you should not modify it.<br />
-        An example for a Slurm cluster:
-        <pre class="prettyprint"><code class="lang-python">
-  import subprocess
-
-  def launch_server(server):
-      os.chdir(GLOBAL_OPTIONS['working_directory'])
-      
-      # create a job script
-      fichier=open("run_server.sh", "w")
-      contenu  = "#!/bin/bash \n"
-      contenu  = "# Example with Slurm \n"
-      contenu += "#SBATCH -N 4 \n"
-      contenu += "#SBATCH --job-name=Melissa_server \n"
-      contenu += "mkdir stats${SLURM_JOB_ID}.resu \n"
-      contenu += "cd stats${SLURM_JOB_ID}.resu \n"
-      contenu += "mpirun "+server.path+"/server "+server.cmd_opt+" & \n"
-      contenu += "wait %1 \n"
-      contenu += "cd "+workdir+" \n"
-      fichier.write(contenu)
-      fichier.close()
-      
-      # run the job script
-      proc = subprocess.Popen('sbatch "./run_server.sh"',
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              shell=True,
-                              universal_newlines=True)
-                              
-      # get the job ID
-      (out, err) = proc.communicate()
-      server.job_id = out.split()[-1]
-
-  USER_FUNCTIONS['launch_server'] = launch_server
-        </code></pre>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> (mandatory):</pre></li>
-        This function is used to launch simulations. The function takes a <code class="code">Group</code> object for argument, and needs to set the group job ID in <code class="code">group.job_id</code>.
-        On a cluster the job ID is given by the batch scheduller. In your local machine, you can use the process ID.
-        You have to copy the file called "server_name.txt" from the directory <code class="prettyprint lang-python">GLOBAL_OPTIONS['working_directory']</code> to the location where the simulations will run. The simulations will read it to retrieve the server node name in order to contact it.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_server_job']</code> (mandatory):</pre></li>
-        This function is called while the server is running. It checks the job's status in the scope of the fault tolerance mechanism.
-        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Server</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_group_job']</code> (mandatory):</pre></li>
-        This function is called while a simulation is running. It checks the job's status in the scope of the fault tolerance mechanism.
-        It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Simulation</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> (mandatory):</pre></li>
-        This function is calles by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
-        The job ID is defined in <code class="code">job.job_id</code>.<br />
-        An example with a Slurm job:
-        <pre class="prettyprint"><code class="lang-python">
-  import os
-  
-  def cancel_job(job):
-      os.system('scancel '+job.job_id)
-      
-  USER_FUNCTIONS['cancel_job'] = cancel_job
-        </code></pre>
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_server']</code> (optional):</pre></li>
-        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code>. It is used to reboot the server in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">launch_server</code> function by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['restart_group']</code> (optional):</pre></li>
-        This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code>. It is used to reboot a simulation group in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> function by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
-        Melissa Launcher calls this function right before launching each simulation job. If it returns False, the launcher will not launch the simulation. Instead, il will wait one second, check the fault tolerance mechanism, and ther retry to launch the simulation.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
-        This function is called once at the end of the study. It does nothing by default.
-        
-        <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['finalize']</code> (optional):</pre></li>
-        The same as <code  class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code>.
-      </ul>
+     
+      <h3 id="run">Launcher options</h3>
      
       <h3 id="run">Run the study</h3>
       
       <p>
-        To run a study with the heat equation solver, call the launcher with the path to your <code class="code">option.py</code> file:
+        To run a study with the heat equation solver, call the launcher with the path to your <code class="code">options.py</code> file:
         <pre class="prettyprint"><code class="lang-bash">
   cd examples/heat_example
   python ../../launcher/melissa_launcher ./
@@ -540,7 +579,11 @@
             else
             {
                 var scroll = window.scrollY;
-                if(scroll >= document.getElementById("launcher").offsetTop - 10)
+                if(scroll >= document.getElementById("sbs").offsetTop - 10)
+                {
+                    rendre_actif("sbs");
+                }
+                else if(scroll >= document.getElementById("launcher").offsetTop - 10)
                 {
                     rendre_actif("launcher");
                 }
@@ -557,6 +600,11 @@
                     rendre_actif("intro");
                 }
             }
+        }
+          
+        document.querySelector('a[href="#sbs"]').onclick = function() {
+            my_on_click =1;
+            rendre_actif("sbs");
         }
           
         document.querySelector('a[href="#launcher"]').onclick = function() {
