@@ -1,9 +1,14 @@
 <map id="melissa_calloc" name="melissa_calloc">
-<area shape="rect" id="node2" href="$covariance_8h.html#a397a48fd78528df80c0f5a4db4c6b163" title="init_covariance" alt="" coords="309,82,419,109"/>
-<area shape="rect" id="node3" href="$sobol_8h.html#afc86b819a42e1d4a17b91bbf4cc4c4bf" title="init_sobol_martinez" alt="" coords="467,82,601,109"/>
-<area shape="rect" id="node4" href="$general__moments_8h.html#a0dffc58e315d87d904a73bcac5cf1268" title="init_moments" alt="" coords="161,57,261,84"/>
-<area shape="rect" id="node5" href="$mean_8h.html#ac0664f09d5236dfcfacd641f4a65aede" title="init_mean" alt="" coords="172,108,251,134"/>
-<area shape="rect" id="node6" href="$variance_8h.html#a1100f517f2c391112c30c2f6008d602e" title="init_variance" alt="" coords="317,133,411,160"/>
-<area shape="rect" id="node7" href="$sobol_8h.html#aee29084731873964860f34549496aa3e" title="init_sobol_jansen" alt="" coords="473,170,595,197"/>
-<area shape="rect" id="node8" href="$quantile_8h.html#aeb8515f1d3e912f1fdbd99c56d762e01" title="init_quantile" alt="" coords="166,260,257,286"/>
+<area shape="rect" id="node2" href="$group__intern__API.html#ga2a12dfe4ee08afe70c09410ad7efc4d6" title="compute_stats" alt="" coords="170,5,278,32"/>
+<area shape="rect" id="node3" href="$covariance_8h.html#a397a48fd78528df80c0f5a4db4c6b163" title="init_covariance" alt="" coords="343,132,453,159"/>
+<area shape="rect" id="node4" href="$sobol_8h.html#afc86b819a42e1d4a17b91bbf4cc4c4bf" title="init_sobol_martinez" alt="" coords="509,132,644,159"/>
+<area shape="rect" id="node5" href="$general__moments_8h.html#a0dffc58e315d87d904a73bcac5cf1268" title="init_moments" alt="" coords="174,157,274,184"/>
+<area shape="rect" id="node6" href="$mean_8h.html#ac0664f09d5236dfcfacd641f4a65aede" title="init_mean" alt="" coords="185,208,263,235"/>
+<area shape="rect" id="node7" href="$variance_8h.html#a1100f517f2c391112c30c2f6008d602e" title="init_variance" alt="" coords="351,233,445,260"/>
+<area shape="rect" id="node8" href="$sobol_8h.html#aee29084731873964860f34549496aa3e" title="init_sobol_jansen" alt="" coords="515,284,638,311"/>
+<area shape="rect" id="node9" href="$group__melissa__io.html#ga92cc0d06e2f617b70b490f15a3741e18" title="read_saved_stats" alt="" coords="161,360,287,387"/>
+<area shape="rect" id="node10" href="$group__melissa__io.html#ga57a69212f9b01fc5b64b810ea4c2197d" title="write_stats_bin" alt="" coords="169,411,279,437"/>
+<area shape="rect" id="node11" href="$group__melissa__io.html#gad563acb5f2be97a6d50b8b6c39045d28" title="write_stats_txt" alt="" coords="170,461,278,488"/>
+<area shape="rect" id="node13" href="$quantile_8h.html#aeb8515f1d3e912f1fdbd99c56d762e01" title="init_quantile" alt="" coords="179,512,269,539"/>
+<area shape="rect" id="node12" href="$group__melissa__fields.html#ga4139ccd5c08f273b416eb8bfa1e399d4" title="finalize_field_data" alt="" coords="335,461,461,488"/>
 </map>

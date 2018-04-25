@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pull_5fdata_5ft',['pull_data_t',['../server_8h.html#ade024e3c1f321b1b4a5d492a36507c7c',1,'server.h']]]
+  ['global_5fdata_5ft',['global_data_t',['../melissa__api_8c.html#a40ae1233b9f4bf07800ed5d3ad91054f',1,'melissa_api.c']]]
 ];

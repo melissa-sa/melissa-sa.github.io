@@ -1,0 +1,7 @@
+<map id="melissa_init_no_mpi" name="melissa_init_no_mpi">
+<area shape="rect" id="node2" href="$group__melissa__api.html#ga7ca50a63f9d539673c272b31996445e3" title="melissa_init" alt="" coords="193,81,284,108"/>
+<area shape="rect" id="node3" href="$group__melissa__utils.html#ga5a19f391d2d18621dcd322b13427ebc9" title="melissa_connect" alt="" coords="355,5,475,32"/>
+<area shape="rect" id="node4" href="$group__melissa__utils.html#gaf35b1b36bd3265d8072186a3a5e33e16" title="melissa_malloc" alt="" coords="359,56,471,83"/>
+<area shape="rect" id="node5" href="$group__melissa__utils.html#ga84a7e50cfdcb24ef4982c3307dce990c" title="melissa_get_node_name" alt="" coords="332,107,499,133"/>
+<area shape="rect" id="node6" href="$group__melissa__utils.html#ga1b8aa4f03cb175ff1abfb23e8b3b4683" title="melissa_bind" alt="" coords="366,157,465,184"/>
+</map>

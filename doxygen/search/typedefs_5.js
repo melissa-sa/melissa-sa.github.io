@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['variance_5ft',['variance_t',['../variance_8h.html#adb205e823c05acdb6a8239c8689b8c06',1,'variance.h']]]
+  ['sobol_5farray_5ft',['sobol_array_t',['../sobol_8h.html#a6c7287d21e84b0a0c3e2fa04e8662a35',1,'sobol.h']]],
+  ['sobol_5fjansen_5ft',['sobol_jansen_t',['../sobol_8h.html#a3a6f1e31f2148de404959dd831af6e03',1,'sobol.h']]],
+  ['sobol_5fmartinez_5ft',['sobol_martinez_t',['../sobol_8h.html#a96c26108e39774159c1fa6d8a033c847',1,'sobol.h']]]
 ];
