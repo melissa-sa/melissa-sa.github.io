@@ -329,7 +329,7 @@
         It takes a <code class="code">Job</code> object for argument, and needs to set <code class="code">job.job_status</code> to 1 if the job is still running, an to 2 otherwhise. A <code class="code">Simulation</code> object inherites from <code class="code">Job</code>, and the job ID is in <code class="code">job.job_id</code>.
         
         <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> (mandatory):</pre></li>
-        This function is calles by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
+        This function is called by the launcher when a job have to be canceled. It takes a <code class="code">Job</code> object for argument, and kills it.
         The job ID is defined in <code class="code">job.job_id</code>.<br />
         An example with a Slurm job:
         <pre class="prettyprint"><code class="lang-python">
@@ -348,7 +348,7 @@
         This function have the same behavior as <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code>. It is used to reboot a simulation group in the case of a fault. If it is not defined, Melissa Launcher uses the <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> function by default.
         
         <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['check_scheduler_load']</code> (optional):</pre></li>
-        Melissa Launcher calls this function right before launching each simulation job. If it returns False, the launcher will not launch the simulation. Instead, il will wait one second, check the fault tolerance mechanism, and ther retry to launch the simulation.
+        Melissa Launcher calls this function right before launching each simulation job. If it returns False, the launcher will not launch the simulation. Instead, il will wait one second, check the fault tolerance mechanism, and then retry until this function returns True.
         
         <li><pre><code class="prettyprint lang-python">USER_FUNCTIONS['postprocessing']</code> (optional):</pre>
         This function is called once at the end of the study. It does nothing by default.
@@ -543,14 +543,78 @@
      
      
       <h3 id="run">Launcher options</h3>
+      
+      <p>
+      In this section, we will use the options_base.py file available in <code class="prettyprint lang-bash">install/share/examples/heat_example</code>. At the end, we should obtain something close to the reference option.py file present in the same directory. <br />
+      as described in the <a class="" href="#launcher">Melissa Launcher section</a>, this file must contain all the material needed by the launcher to handle the study.
+      </p>
+     
+      <p>
+      First, define all the values of the dictionaries <code class="prettyprint lang-python">STUDY_OPTIONS</code> and <code class="prettyprint lang-python">MELISSA_STATS</code>. Then, we will define at least the mandatory user functions.
+      </p>
+     
+      <p>
+      The first one is <code class="prettyprint lang-python">USER_FUNCTIONS['draw_parameter_set']</code>. It must return a Numpy array of parameter, of size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>. It is used to draw the parameter sets of the simulations.<br />
+      </p>
+     
+      <p>
+      The second one is <code class="prettyprint lang-python">USER_FUNCTIONS['launch_server']</code>. It takes a <code class="prettyprint lang-python">server</code> object as an argument, ans must set a job ID in the <code class="prettyprint lang-python">job_id</code> attribute of this object.
+      The <code class="prettyprint lang-python">server</code> object has two most useful attributes, set by Melissa Launcher:
+      <ul>
+      <li><code class="prettyprint lang-python">path</code>: the path to the Melissa Server executable</li>
+      <li><code class="prettyprint lang-python">cmd_opt</code>: the command line options to passs to Melissa Server.</li>
+      </ul>
+      On a cluster, you will call the batch script to launch the server. In that case, you will need to set the command in your script, call it from this function, and get the job ID.<br/>
+      In your local machine, the job ID would be the PID of the main process. It should look like that:
+        <pre class="prettyprint mpi"><code class="lang-python">
+  def launch_server(server):
+      server.job_id = subprocess.Popen(('mpirun ' +
+                                        server.path +
+                                        '/melissa_server ' +
+                                        server.cmd_opt +
+                                        ' &').split()).pid
+        </code></pre>
+        <pre class="prettyprint nompi"><code class="lang-python">
+  def launch_server(server):
+      server.job_id = subprocess.Popen((server.path +
+                                        '/melissa_server ' +
+                                        server.cmd_opt +
+                                        ' &').split()).pid
+        </code></pre>
+        
+      </p>
+      <p>
+      The next function to define is <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code>. It is used to launch simulations (or groups of simulatioin the case of Sobol' indices computation). It takes a <code class="prettyprint lang-python">group</code> object as argument, and must set the job ID of the simulation (or group of simulations) in the attribute <code class="prettyprint lang-python">job_id</code> of the <code class="prettyprint lang-python">group</code> object. This object has three important attributes:
+      <ul>
+      <li><code class="prettyprint lang-python">simu_id</code></li>
+      <li><code class="prettyprint lang-python">rank</code></li>
+      <li><code class="prettyprint lang-python">param_set</code></li>
+      </ul>
+      We distinguish two kinds of groups:
+      <ul>
+      <li>Single simulation group (general case): Every simulation has its own job. In this case, <code class="prettyprint lang-python">simu_id</code> and <code class="prettyprint lang-python">rank</code> are equivalents, and <code class="prettyprint lang-python">param_set</code> is a numpy array of size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>.</li>
+      <li>Sobol group: In the case of Sobol' indices computation, all the simulations of a Sobol' group must be in the same job. In that case, <code class="prettyprint lang-python">simu_id</code> is a list of the simulation IDs inside the Sobol' group (the ones you will pass to <code class="prettyprint lang-c">melissa_init</code>), and <code class="prettyprint lang-python">rank</code> is the ID of the group. param_set is a list of size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters'] + 2</code> of numpy arrays of size <code class="prettyprint lang-python">STUDY_OPTIONS['nb_parameters']</code>, corresponding to the n+2 sets of n parameters of the n+2 simulations of the Sobol' group.</li>
+      </ul>
+      </p>
+     
+      <p>
+      Once we have set the job IDs of our jobs, we can use it to define the fault tolerance functions. In our case, we will use the same function for the server and the simulations. It takes a <code class="prettyprint lang-python">Job</code> object as argument, and sets its <code class="prettyprint lang-python">status</code> attribute to 0 if it is waiting to be scheduled, 1 if it is currently running, or 2 if it is not running anymore.
+      In your local machine, a job will never be have a 0 <code class="prettyprint lang-python">status</code>, because it is launched immediately when <code class="prettyprint lang-python">USER_FUNCTIONS['launch_group']</code> is called.
+      </p>
+      <p>
+      <code class="prettyprint lang-python">USER_FUNCTIONS['cancel_job']</code> kills a given job. It takes a <code class="prettyprint lang-python">Job</code> object in argument, and uses its attribute <code class="prettyprint lang-python">job_id</code> to kill or cancel it. It does not return anything.
+      </p>
+      <p>
+      Examples of all theses functions can be found in the file <code class="prettyprint lang-bash">install/share/examples/heat_example/scripts/options_local.py</code>.
+      Remember that your option file must be called <code class="prettyprint lang-bash">options.py</code>.
+      </p>
      
       <h3 id="run">Run the study</h3>
       
       <p>
         To run a study with the heat equation solver, call the launcher with the path to your <code class="code">options.py</code> file:
         <pre class="prettyprint"><code class="lang-bash">
-  cd examples/heat_example
-  python ../../launcher/melissa_launcher ./
+  melissa_launcher .
         </code></pre>
         The results will be in the directory <code class="code">STATS</code>, in files of the form: <code class="code">&#60field_name&#62_&#60stat&#62.&#60time_stamp&#62</code><br />
         For example, the variance of the field "heat" at the first timestep whould be: <code class="code">heat_variance.001</code>
