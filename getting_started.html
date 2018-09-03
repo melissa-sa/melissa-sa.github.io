@@ -38,49 +38,52 @@
  
     <section id="tuto_text" class="text">
       <h1>Getting Started</h1><hr/>
-      <h2 id="install">Installation</h2>
-      <p>
-        First, download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>.<br />
-        Melissa is a CMake project.
-        In order to install Melissa from the sources, you will need CMake and PkgConfig.
-        If you don't have ZeroMQ installed, CMake will download and install it for you.<br />
-        From the <code class="code">Melissa</code> root directory:
-        <pre class="prettyprint"><code class="lang-bash">
-  mkdir build
-  cd build
-  cmake ../source
-  make
-  make install
-  source ../install/melissa_set_env.sh
-        </code></pre>
-      </p>
-      <h3 id="options">CMake options</h3>
-      <p>
-        Melssa needs ZeroMQ version 4.1.5 or above to run. If you have acces to internet, you can ask Melissa to download and install ZeroMQ by using <code class="code">-DINSTALL_ZMQ=ON</code> when calling CMake.
-      </p>
-      <p>
-      A list of usefull CMake options:
+
+      <h2 id="code">Source Code</h2>
+      Download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>.<br/>
+      <h2 id="code">Dependencies</h2>
         <ul>
-          <li><code class="code">-DBUILD_WITH_MPI</code> (default: ON)</li>
-          Enables MPI.
-          <li><code class="code">-DBUILD_DOCUMENTATION</code> (default: OFF)</li>
-          If Doxygen is found, builds the Doxygen documentation.
-          <li><code class="code">-DBUILD_EXAMPLES</code> (default: ON)</li>
-          Compile the heat equation solver examples.
-          <li><code class="code">-DBUILD_TESTING</code> (default: ON)</li>
-          Builds Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code> or <code class="prettyprint lang-bash">ctest</code>.
-          <li><code class="code">-DBUILD_WITH_OpenMP</code> (default: OFF)</li>
-          Enables OpenMP for Melissa Server.
-          <li><code class="code">-DBUILD_WITH_PROBES</code> (default: OFF)</li>
-          Adds some debug outputs to Melissa server.
+          <li>Cmake
+          <li>MPI, OpenMP: for melissa parallel server, a sequential server  will be built if not available
+          <li>Python 2
+          <li>ZeroMQ: version 4.1.5 or above -  cmake can download and install it if cmake option
+      tuned on <br/> <code class="code">-DINSTALL_ZMQ=ON</code>
+          <li>Fortran Compiler, PythonLibs, Numpy: for the exemples 
+        </ul>
+        </p>
+        <h2 id="options">CMake Options</h2>
+        <p>
+        <ul>
           <li><code class="code">-DCMAKE_INSTALL_PREFIX</code> (default: <code class="prettyprint lang-bash">'../install'</code>)</li>
-          Defines melissa install directory.
+          Melissa install directory.
+          <li><code class="code">-DBUILD_WITH_MPI</code> (default: ON)</li>
+          Enable MPI.
+          <li><code class="code">-DBUILD_WITH_OpenMP</code> (default: OFF)</li>
+          Enable OpenMP for Melissa Server.
           <li><code class="code">-DINSTALL_ZMQ</code> (default: OFF)</li>
           Enable CMake to install ZeroMQ.
+          <li><code class="code">-DBUILD_DOCUMENTATION</code> (default: OFF)</li>
+          If Doxygen is found, build the Doxygen documentation.
+          <li><code class="code">-DBUILD_EXAMPLES</code> (default: ON)</li>
+          Compile examples.
+          <li><code class="code">-DBUILD_TESTING</code> (default: ON)</li>
+          Build Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code> or <code class="prettyprint lang-bash">ctest</code>.
+          <li><code class="code">-DBUILD_WITH_PROBES</code> (default: OFF)</li>
+          Add some debug outputs to Melissa server.
         </ul>
       </p>
+      <h2 id="install">Compile and Install</h2>
+        <li>Compilation, installation and environment variable setting from the  <code class="code">Melissa</code> root directory:
+        <pre class="prettyprint"><code class="lang-bash">
+        mkdir build
+        cd build
+        cmake ../source -DINSTALL_ZMQ=OFF
+        make
+        make install
+        source ../install/melissa_set_env.sh
+        </code></pre>
+      </p>
       <h2 id="testing">Testing</h2>
-      Melissa comes with a small example, used as a test for the installation.
       The examples are built if CMake finds a Fortran compiler and if you enabeled the <code class="code">BUILD_EXAMPLES</code> option.
       The examples are installed in <code class="prettyprint lang-bash">install/share/examples</code>. We will use the heat equation solver example to test the installation.
       From the <code class="prettyprint lang-bash">install/share/examples/heat_example</code> directory, run:
@@ -89,7 +92,6 @@
         </code></pre>
         It will launch a pre-configured sensitivity analysis.
         To see more details about this example, check the <a href="documentation.html#intro"><span>use case documentation</span></a>.
-        
     </section>
     </div>
     <script>
