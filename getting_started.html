@@ -75,22 +75,23 @@
       <h2 id="install">Compile and Install</h2>
         <li>Compilation, installation and environment variable setting from the  <code class="code">Melissa</code> root directory:
         <pre class="prettyprint"><code class="lang-bash">
-        mkdir build
-        cd build
-        cmake ../source -DINSTALL_ZMQ=OFF
-        make
-        make install
-        source ../install/melissa_set_env.sh
+mkdir build
+cd build
+cmake ../source -DINSTALL_ZMQ=OFF
+make
+make install
+source ../install/melissa_set_env.sh
         </code></pre>
       </p>
       <h2 id="testing">Testing</h2>
       The examples are built if CMake finds a Fortran compiler and if you enabeled the <code class="code">BUILD_EXAMPLES</code> option.
-      The examples are installed in <code class="prettyprint lang-bash">install/share/examples</code>. We will use the heat equation solver example to test the installation.
-      From the <code class="prettyprint lang-bash">install/share/examples/heat_example</code> directory, run:
+      The examples are installed in <code class="prettyprint lang-bash">install/share/melissa/examples</code>. We will use the heat equation solver example to test the installation.
+      In the <code class="prettyprint lang-bash">install/share/melissa/examples/heat_example</code> directory, you will find the solver in the <code class="prettyprint lang-bash">base</code> directory, and several sensitivity analysis preconfigures for different batch schedullers.
+      For testing purposes, from the <code class="prettyprint lang-bash">base</code> directory run:
         <pre class="prettyprint"><code class="lang-bash">
-  melissa_launcher
+  melissa_launcher .
         </code></pre>
-        It will launch a pre-configured sensitivity analysis.
+        It will launch a pre-configured sensitivity analysis on your local machine.
         To see more details about this example, check the <a href="documentation.html#intro"><span>use case documentation</span></a>.
     </section>
     </div>
