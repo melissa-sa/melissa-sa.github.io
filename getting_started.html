@@ -1,148 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <link href="prettify.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="prettify.js"></script>
-    <link rel="stylesheet" href="melissa.css" />
-
-    <title>Melissa</title>
-  </head>
-
-  <body onload="prettyPrint()">
-        <nav id="navrow1" class="topmenu">
-          <a href="index.html"><div id="melissa"><img src="src/Logotype_MELISSA/Logo_MELISSA_Couleur.png" alt="Melissa" title="Melissa" width="100%"/></div></a>
-            <ul class="tablist">
-            <li><a href="index.html"><span>About</span></a></li>
-            <li class="current"><a href="getting_started.html"><span>Getting&#160;Started</span></a></li>
-            <li><a href="documentation.html"><span>Documentation</span></a></li>
-            <li><a href="gallery.html"><span>Gallery</span></a></li>
-            <li><a href="contacts.html"><span>Contacts</span></a></li>
-            <li><a href="https://github.com/melissa-sa/melissa" target="_blank"><span>Source</span></a></li>
-            </ul>
-        </nav>
-    <div id="titlearea">
-      <table cellspacing="0" cellpadding="0">
-        <tbody>
-          <tr style="height: 56px;">
-            <td style="padding-left: 0.5em;">
-              <div id="melissa">
-                Melissa
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div id="contener1">
- 
-    <section id="tuto_text" class="text">
-      <h1>Getting Started</h1><hr/>
-
-      <h2 id="code">Source Code</h2>
-      Download Melissa sources <a href='https://github.com/melissa-sa/melissa' title='Melissa repository' target='_blank'>here</a>.<br/>
-      <h2 id="code">Dependencies</h2>
-        <ul>
-          <li>Cmake
-          <li>MPI, OpenMP: for melissa parallel server, a sequential server  will be built if not available
-          <li>Python 2
-          <li>ZeroMQ: version 4.1.5 or above -  cmake can download and install it if cmake option
-      tuned on <br/> <code class="code">-DINSTALL_ZMQ=ON</code>
-          <li>Fortran Compiler, PythonLibs, Numpy: for the exemples 
-        </ul>
-        </p>
-        <h2 id="options">CMake Options</h2>
-        <p>
-        <ul>
-          <li><code class="code">-DCMAKE_INSTALL_PREFIX</code> (default: <code class="prettyprint lang-bash">'../install'</code>)</li>
-          Melissa install directory.
-          <li><code class="code">-DBUILD_WITH_MPI</code> (default: ON)</li>
-          Enable MPI.
-          <li><code class="code">-DBUILD_WITH_OpenMP</code> (default: OFF)</li>
-          Enable OpenMP for Melissa Server.
-          <li><code class="code">-DINSTALL_ZMQ</code> (default: OFF)</li>
-          Enable CMake to install ZeroMQ.
-          <li><code class="code">-DBUILD_DOCUMENTATION</code> (default: OFF)</li>
-          If Doxygen is found, build the Doxygen documentation.
-          <li><code class="code">-DBUILD_EXAMPLES</code> (default: ON)</li>
-          Compile examples.
-          <li><code class="code">-DBUILD_TESTING</code> (default: ON)</li>
-          Build Melissa tests. They can be run with <code class="prettyprint lang-bash">make test</code> or <code class="prettyprint lang-bash">ctest</code>.
-          <li><code class="code">-DBUILD_WITH_PROBES</code> (default: OFF)</li>
-          Add some debug outputs to Melissa server.
-        </ul>
-      </p>
-      <h2 id="install">Compile and Install</h2>
-        <li>Compilation, installation and environment variable setting from the  <code class="code">Melissa</code> root directory:
-        <pre class="prettyprint"><code class="lang-bash">
-mkdir build
-cd build
-cmake ../source -DINSTALL_ZMQ=OFF
-make
-make install
-source ../install/melissa_set_env.sh
-        </code></pre>
-      </p>
-      <h2 id="testing">Testing</h2>
-      The examples are built if CMake finds a Fortran compiler and if you enabeled the <code class="code">BUILD_EXAMPLES</code> option.
-      The examples are installed in <code class="prettyprint lang-bash">install/share/melissa/examples</code>. We will use the heat equation solver example to test the installation.
-      In the <code class="prettyprint lang-bash">install/share/melissa/examples/heat_example</code> directory, you will find the solver in the <code class="prettyprint lang-bash">base</code> directory, and several sensitivity analysis preconfigures for different batch schedullers.
-      For testing purposes, from the <code class="prettyprint lang-bash">base</code> directory run:
-        <pre class="prettyprint"><code class="lang-bash">
-  melissa_launcher .
-        </code></pre>
-        It will launch a pre-configured sensitivity analysis on your local machine.
-        To see more details about this example, check the <a href="documentation.html#intro"><span>use case documentation</span></a>.
-    </section>
-    </div>
-    <script>
-        <!--
-        var my_on_click = 0;
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="melissa.css" />
+        <title>Melissa</title>
+    </head>
+    
+    <body>
+        <div id="contener1">
+        <h1>
+<a href="index.html"><img src="src/Logotype_MELISSA/Logo_MELISSA_Couleur.png" alt="Melissa" title="Melissa" width="90%"/></a>
+</h1>
+        <br/>
+        <br/>
+        <h2>
+        Melissa documentation is now on the <a href='https://github.com/melissa-sa/melissa/wiki/1-Home' title='Github repository' target='_blank'>wiki page</a> of the <a href='https://github.com/melissa-sa/melissa' title='Github repository' target='_blank'>Github repository</a>
+        </h2>
+        </div>
         
-        document.addEventListener('scroll',scroll_func);
-        document.querySelector('a[href="#testing"]').addEventListener('click',click_testing);
-        document.querySelector('a[href="#install"]').addEventListener('click',click_install);
-        
-        function click_testing()
-        {
-            my_on_click =1;
-            rendre_actif("testing");
-        }
-        
-        function click_install()
-        {
-            my_on_click =1;
-            rendre_actif("install");
-        }
-        
-        
-        function scroll_func()
-        {
-            if(my_on_click ==1)
-            {
-                my_on_click = 0;
-            }
-            else
-            {
-                var scroll = window.scrollY;
-                if(scroll >= document.getElementById("testing").offsetTop - 10)
-                {
-                    rendre_actif("testing");
-                }
-                else if(scroll >= document.getElementById("install").offsetTop - 10)
-                {
-                    rendre_actif("install");
-                }
-            }
-        }
-        
-        function rendre_actif(element)
-        {
-            document.querySelector(".active").className = "";
-            document.querySelector('a[href="#' + element + '"]').className = "active";
-        }
-        
-        //-->
-    </script>
-  </body>
+    </body>
 </html>
