@@ -1,7 +1,0 @@
-<map id="save_stats" name="save_stats">
-<area shape="rect" id="node2" href="$mean_8c.html#ace3834d6b2c50b6e53c2ce80560f48b8" title="save_mean" alt="" coords="299,6,388,33"/>
-<area shape="rect" id="node3" href="$variance_8c.html#add3840dd67701ac67caeb648d75d9371" title="save_variance" alt="" coords="142,32,249,58"/>
-<area shape="rect" id="node4" href="$min__max_8c.html#acfff5dd4ebcfa3d0d43d5d96adba757e" title="save_min_max" alt="" coords="140,82,251,109"/>
-<area shape="rect" id="node5" href="$threshold_8c.html#a8c0946a6f8bf38d8c646b0ca6966d915" title="save_threshold" alt="" coords="140,133,251,160"/>
-<area shape="rect" id="node6" href="$quantile_8c.html#ad2dfd8322083a3b23e39de93dfcff453" title="save_quantile" alt="" coords="144,184,247,210"/>
-</map>

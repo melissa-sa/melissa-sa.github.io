@@ -1,6 +1,0 @@
-<map id="init_mean" name="init_mean">
-<area shape="rect" id="node2" href="$covariance_8h.html#a397a48fd78528df80c0f5a4db4c6b163" title="init_covariance" alt="" coords="132,5,241,32"/>
-<area shape="rect" id="node4" href="$variance_8h.html#a1100f517f2c391112c30c2f6008d602e" title="init_variance" alt="" coords="139,56,234,83"/>
-<area shape="rect" id="node3" href="$sobol_8h.html#afc86b819a42e1d4a17b91bbf4cc4c4bf" title="init_sobol_martinez" alt="" coords="289,5,424,32"/>
-<area shape="rect" id="node5" href="$sobol_8h.html#aee29084731873964860f34549496aa3e" title="init_sobol_jansen" alt="" coords="295,56,418,83"/>
-</map>

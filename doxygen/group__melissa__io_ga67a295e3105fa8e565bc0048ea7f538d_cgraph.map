@@ -1,5 +1,0 @@
-<map id="read_simu_states" name="read_simu_states">
-<area shape="rect" id="node2" href="$group__melissa__utils.html#gaf35b1b36bd3265d8072186a3a5e33e16" title="melissa_malloc" alt="" coords="336,5,448,32"/>
-<area shape="rect" id="node3" href="$group__melissa__fault__tolerance.html#ga9c672568690f198b03312565bbb5aaf3" title="add_simulation" alt="" coords="179,31,288,57"/>
-<area shape="rect" id="node4" href="$group__melissa__utils.html#ga0028e678d2fb0a49611d7957ce166565" title="melissa_free" alt="" coords="185,81,281,108"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="read_saved_stats" name="read_saved_stats">
-<area shape="rect" id="node2" href="$mean_8c.html#abd6ca4f1ce053f38027f28f5ddb13e4d" title="read_mean" alt="" coords="335,7,421,34"/>
-<area shape="rect" id="node3" href="$variance_8c.html#a6867441f5ec83e385bd0b2b018020a4d" title="read_variance" alt="" coords="181,32,284,59"/>
-<area shape="rect" id="node4" href="$min__max_8c.html#a5631f42ad9963a7c9215f84debbb0d22" title="read_min_max" alt="" coords="179,83,286,110"/>
-<area shape="rect" id="node5" href="$threshold_8c.html#ac8eab8adf1f1e4d87aa3a5cb2de4fef2" title="read_threshold" alt="" coords="179,134,286,160"/>
-<area shape="rect" id="node6" href="$quantile_8c.html#a5c982072c4aefe5eb31c8b5c93056365" title="read_quantile" alt="" coords="183,184,282,211"/>
-<area shape="rect" id="node7" href="$group__melissa__utils.html#gaeb233a34453fe334ce20c0ed14d10c99" title="melissa_calloc" alt="" coords="179,235,287,262"/>
-</map>

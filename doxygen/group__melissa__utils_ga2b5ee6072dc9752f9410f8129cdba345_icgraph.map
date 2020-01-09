@@ -1,6 +1,0 @@
-<map id="melissa_get_time" name="melissa_get_time">
-<area shape="rect" id="node2" href="$group__melissa__fault__tolerance.html#ga8a98bac047fa229cb7fada325af753cc" title="check_timeouts" alt="" coords="183,5,298,32"/>
-<area shape="rect" id="node3" href="$group__melissa__api.html#gae2f020325f978a5636f169063b4cf11b" title="melissa_send" alt="" coords="189,56,292,83"/>
-<area shape="rect" id="node5" href="$group__melissa__fields.html#ga4139ccd5c08f273b416eb8bfa1e399d4" title="finalize_field_data" alt="" coords="177,107,304,133"/>
-<area shape="rect" id="node4" href="$group__melissa__api.html#gac87cda161d1adc0a3f38bfa24386b693" title="melissa_send_no_mpi" alt="" coords="352,56,503,83"/>
-</map>

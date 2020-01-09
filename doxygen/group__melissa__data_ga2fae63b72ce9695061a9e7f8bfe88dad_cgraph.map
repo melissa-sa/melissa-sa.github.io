@@ -1,8 +1,0 @@
-<map id="melissa_free_data" name="melissa_free_data">
-<area shape="rect" id="node2" href="$mean_8c.html#aad77020d94111890c0620f660c7f0805" title="free_mean" alt="" coords="193,5,275,32"/>
-<area shape="rect" id="node3" href="$group__melissa__utils.html#ga0028e678d2fb0a49611d7957ce166565" title="melissa_free" alt="" coords="335,132,431,159"/>
-<area shape="rect" id="node4" href="$variance_8c.html#a96d9dc6709bb4f8b793c9182c8765887" title="free_variance" alt="" coords="184,107,284,133"/>
-<area shape="rect" id="node5" href="$min__max_8c.html#a9da14f2d930f88ec7ec8aa3209c31223" title="free_min_max" alt="" coords="182,157,286,184"/>
-<area shape="rect" id="node6" href="$quantile_8c.html#adcb5679372d849ffc4c85484f5fa1477" title="free_quantile" alt="" coords="186,208,282,235"/>
-<area shape="rect" id="node7" href="$general__moments_8c.html#a94f54044027adb7851c72b988db4b535" title="free_moments" alt="" coords="181,259,287,285"/>
-</map>
